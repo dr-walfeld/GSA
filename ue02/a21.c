@@ -77,6 +77,7 @@ int alignsDyn (int m, int n, int* counter)
 		}
 	}
 	// hier nur Ausgabe zur Kontrolle
+	/*
 	for (i = 0; i <= m; i++)
 	{
 		for (j = 0; j <= n; j++)
@@ -85,7 +86,7 @@ int alignsDyn (int m, int n, int* counter)
 		}
 		printf("\n");
 	}
-	
+	*/
 	// das Ergebnis befindet sich in dem letzten Feld des Arrays
 	// (zuletzt berechnet)
 	free (table);
