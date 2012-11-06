@@ -165,18 +165,24 @@ void alignment_show (alignment* a)
   int index2 = 0;
   int printindex = 0;
 
-  char * print_s1 = (char*) malloc (a->length+1); // +1 fuer \0
-  char * print_s2 = (char*) malloc (a->length+1); // +1 fuer \0
-  char * print_bt = (char*) malloc (a->length+1); // +1 fuer \0
+  // reseve space for C-strings to print
+  char * print_s1 = (char*) malloc (a->length+1); // +1 for \0
+  char * print_s2 = (char*) malloc (a->length+1); // +1 for \0
+  char * print_bt = (char*) malloc (a->length+1); // +1 for \0
 
   multiedit* me = NULL;
+
+  // iterate over all entries in multiedit-list
   for (i = 0; i < a->editlength; i++)
   {
     me = a->edits[i];
+    // apply all single edit-operations
     for (j = 0; j < me->stretch; j++)
     {
+      // check nature of edit operation
       if (me->operation == 'R')
       {
+        // chekc euqality of bases for replacement operation
         if (a->s1[index1] == a->s2[index2])
         {
           print_bt[printindex] = '|';
@@ -209,16 +215,17 @@ void alignment_show (alignment* a)
     }
   }
 
-  //printf("%d, %d\n", index1, index2);
-
+  // set zero-termination
   print_s1[printindex] = '\0';
   print_s2[printindex] = '\0';
   print_bt[printindex] = '\0';
 
+  // prints alignment
   printf ("%s\n", print_s1);
   printf ("%s\n", print_bt);
   printf ("%s\n", print_s2);
 
+  // free space of C-strings
   free (print_s1);
   free (print_s2);
   free (print_bt);

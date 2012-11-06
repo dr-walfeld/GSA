@@ -1,11 +1,11 @@
 CFLAGS=-Wall -Werror -O2
 
-all: a41 a43
+all: alignment a43
 
 a43: a43.c
 	gcc ${CFLAGS} -o $@ $<
 
-a41: a41.c
+alignment: alignment.c
 	gcc ${CFLAGS} -o $@ $<
 
 clean: 
