@@ -12,7 +12,7 @@ typedef struct {
   char* s2;
   int len2;
 
-  multiedit* edits;
+  multiedit** edits;
   int editlength;
   int length;
   int maxlen;
@@ -20,8 +20,8 @@ typedef struct {
 } alignment;
 
 // foward Deklarationen der Funktionen auf einem Alignment
-multiedit multiedit_new (char);
-alignment alignment_new (char*, int, char*, int);
+multiedit* multiedit_new (char);
+alignment* alignment_new (char*, int, char*, int);
 int alignment_add_operation (alignment*, char);
 int alignment_add_deletion (alignment*);
 int alignment_add_deletions (alignment*, int);
@@ -30,6 +30,6 @@ int alignment_add_insertions (alignment*, int);
 int alignment_add_replacement (alignment*);
 int alignment_add_replacements (alignment*, int);
 int alignment_evalcost (alignment*, int(*)(char,char));
-void alignment_show (alignment*);
+int alignment_show (alignment*);
 void alignment_delete (alignment*);
 

@@ -23,6 +23,7 @@ typedef struct {
 multiedit* multiedit_new (char);
 alignment* alignment_new (char*, int, char*, int);
 int alignment_add_operation (alignment*, char);
+int alignment_add_operations (alignment*, char, int);
 int alignment_add_deletion (alignment*);
 int alignment_add_deletions (alignment*, int);
 int alignment_add_insertion (alignment*);
@@ -30,6 +31,6 @@ int alignment_add_insertions (alignment*, int);
 int alignment_add_replacement (alignment*);
 int alignment_add_replacements (alignment*, int);
 int alignment_evalcost (alignment*, int(*)(char,char));
-void alignment_show (alignment*);
+int alignment_show (alignment*);
 void alignment_delete (alignment*);
 

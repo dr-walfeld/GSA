@@ -3,6 +3,8 @@
 #include <string.h>
 #include "alignment.h"
 
+#define INF 1000000
+
 int unit_cost (char, char);
 
 // erzeugt neues Multiedit und gibt es zurueck;
@@ -64,20 +66,25 @@ int alignment_add_operation (alignment* a, char operation)
   return 0;
 }
 
+int alignment_add_operations (alignment *a, char operation, int length)
+{
+  int i;
+  int s = 0;
+  for (i = 0; i < length && s == 0; i++)
+  {
+    s += alignment_add_operation (a, operation);
+  }
+
+  return s;
+}
+
 int alignment_add_deletion (alignment* a)
 {
   return alignment_add_operation (a, 'D');
 }
 int alignment_add_deletions (alignment* a, int length)
 {
-  int i;
-  int s = 0;
-  for (i = 0; i < length; i++)
-  {
-    s += alignment_add_deletion (a);
-  }
-
-  return (s == 0);
+  return alignment_add_operations (a, 'D', length);
 }
 int alignment_add_insertion (alignment* a)
 {
@@ -85,29 +92,15 @@ int alignment_add_insertion (alignment* a)
 }
 int alignment_add_insertions (alignment* a, int length)
 {
-  int i;
-  int s = 0;
-  for (i = 0; i < length; i++)
-  {
-    s |= alignment_add_insertion (a);
-  }
-
-  return s;
+  return alignment_add_operations (a, 'I', length);
 }
-
 int alignment_add_replacement (alignment* a)
 {
   return alignment_add_operation (a, 'R');
 }
 int alignment_add_replacements (alignment* a, int length)
 {
-  int i;
-  int s = 0;
-  for (i = 0; i < length; i++)
-  {
-    s += alignment_add_replacement (a);
-  }
-  return (s == 0);
+  return alignment_add_operations (a, 'R', length);
 }
 
 int unit_cost (char a, char b)
@@ -158,7 +151,7 @@ int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
   return costs;
 }
 
-void alignment_show (alignment* a)
+int alignment_show (alignment* a)
 {
   int i,j;
   int index1 = 0;
@@ -179,6 +172,8 @@ void alignment_show (alignment* a)
     // apply all single edit-operations
     for (j = 0; j < me->stretch; j++)
     {
+      if (a->s1[index1] == '\0' || a->s2[index2] == '\0')
+        return 1;
       // check nature of edit operation
       if (me->operation == 'R')
       {
@@ -198,6 +193,8 @@ void alignment_show (alignment* a)
       }
       else if (me->operation == 'I')
       {
+        if (a->s2[index2] == '\0')
+          return 1;
         print_s1[printindex] = '-';
         print_s2[printindex] = a->s2[index2];
         print_bt[printindex] = ' ';
@@ -205,6 +202,8 @@ void alignment_show (alignment* a)
       }
       else
       {
+        if (a->s1[index1] == '\0')
+          return 1;
         print_s1[printindex] = a->s1[index1];
         print_s2[printindex] = '-';
         print_bt[printindex] = ' ';
@@ -229,6 +228,8 @@ void alignment_show (alignment* a)
   free (print_s1);
   free (print_s2);
   free (print_bt);
+
+  return 0;
 
 }
 
