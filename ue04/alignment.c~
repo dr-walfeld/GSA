@@ -140,7 +140,7 @@ int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
         // (and if string is not terminated);
         // better not to rely on sequence length
         if (a->s1[index1] == '\0' || a->s2[index2] == '\0')
-          return -1;
+          return -1;<
         // determine costs of current base alignment
         costs += costFunc(a->s1[index1], a->s2[index2]);
         index1++;
