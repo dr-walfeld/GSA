@@ -2,108 +2,121 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ARGMIN(a,vA,b,vB,c,vC) (vA <= vB ? (vA <= vC ? a : c) : (vB <= vC ? b : c))
+#define MIN(a,b,c) (a <= b ? (a <= c ? a : c) : (b <= c ? b : c))
 #define INF 1000000
 
-int align (int*, char*, int, char*, int, int (*) (int,int,char,char));
-int calcCost (int*, int, char, int, char, int, int (*)(int,int,char,char));
-int unity (int, int, char, char);
-int hamming (int, int, char, char);
-int otherCosts (int, int, char, char);
+int align (int**, char*, int, char*, int, int (*) (char,char));
+int unity (char, char);
+int hamming (char, char);
+int otherCosts (char, char);
+int** initializeDP (int, int);
+void deleteDP (int**, int, int);
 
-int unity (int i, int j, char c1, char c2)
+// unit cost function
+int unity (char c1, char c2)
 {
-  if (i == 0 || j == 0)
+  if (c1 == '-' || c2 == '-')
     return 1;
   if (c1 != c2)
     return 1;
   return 0;
 }
 
-int hamming (int i, int j, char c1, char c2)
+// hamming costs
+int hamming (char c1, char c2)
 {
-  if (i == 0 || j == 0)
+  if (c1 == '-' || c2 == '-')
     return INF;
   if (c1 != c2)
     return 2;
   return 0;
 }
 
-int otherCosts (int i, int j, char c1, char c2)
+// other cost function
+int otherCosts (char c1, char c2)
 {
-  if (i == 0 || j == 0)
+  if (c1 == '-' || c2 == '-')
     return 1;
   if (c1 != c2)
     return 3;
   return 0;
 }
 
-int calcCost (int* table, int i, char c1, int j, char c2, int len2, int (*costFunc)(int,int,char,char))
-{
-  int a,vA,b,vB,c,vC,cost;
-  int gap = costFunc (0,0,c1,c2);
-  int base = costFunc (i,j,c1,c2);
-  if (i == 0 && j == 0)
-  {
-    cost = 0;
-  }
-  else if (i == 0)
-  {
-    cost = table[j-1] + gap;
-  }
-  else if (j == 0)
-  {
-    cost = table[(i-1)*(len2+1)] + gap;
-  }
-  else
-  {
-    // Implementierung nicht direkt ueber Wert, sondern ueber
-    // index => nuetzlich fuer backtracking
-    a = i*(len2+1)+j-1;
-    b = (i-1)*(len2+1)+j;
-    c = (i-1)*(len2+1)+j-1;
-    vA = table[a] + gap;
-    vB = table[b] + gap;
-    vC = table[c] + base;
-    int minindex = ARGMIN(a,vA,b,vB,c,vC);
-    if (minindex == a)
-    {
-      cost = vA;
-    }
-    else if (minindex == b)
-    {
-      cost = vB;
-    }
-    else
-    {
-      cost = vC;
-    }
-  }
-  // if costs are bigger than infinity (INF) => cost = INF
-  if (cost > INF)
-    cost = INF;
-  return cost;
-}
-
-// calculate alignment
-int align (int* table, char* s1, int len1, char* s2, int len2, int (*costFunc)(int,int,char,char))
+// fill DP-table
+int align (int** table, char* s1, int len1, char* s2, int len2, int (*costFunc)(char,char))
 {
   int i = 0;
   int j = 0;
   int cost = 0;
+  int a,b,c;
 
-  // iterate over matrix and calculate current element
+  // determine gap-costs
+  int gap = costFunc ('-', '-');
+
+  // fill first columns of all rows
   for (i = 0; i <= len1; i++)
   {
-    for (j = 0; j <= len2; j++)
+    cost = i*gap;
+    // check if costs are bigger than "infinity" => costs = INF
+    if (cost > INF)
+      cost = INF;
+    table[i][0] = cost;
+  }
+  
+  // fill first row
+  for (j = 0; j <= len2; j++)
+  {
+    cost = j*gap;
+    if (cost > INF)
+      cost = INF;
+    table[0][j] = cost;
+  }
+
+  // iterate over matrix and calculate current element
+  for (i = 1; i <= len1; i++)
+  {
+    for (j = 1; j <= len2; j++)
     {
-      cost = calcCost (table, i, (i > 0 ? s1[i-1] : 'X'), j, (j > 0 ? s2[j-1] : 'X'), len2, costFunc);
-      table[i*(len2+1)+j] = cost;
+      a = table[i][j-1] + gap;
+      b = table[(i-1)][j] + gap;
+      c = table[(i-1)][j-1] + costFunc (s1[i-1], s2[j-1]);
+      cost = MIN(a,b,c);
+      if (cost > INF)
+        cost = INF;
+      table[i][j] = cost;
     }
   }
 
   // return costs for last element in table
-  return table[(i-1)*(len2+1)+j-1];
+  return cost;
+}
+
+// reserve memory for DP-table of size mxn and initialize with 0
+// return pointer to DP-matrix
+int** initializeDP (int m, int n)
+{
+  int** table = (int **) calloc (m, sizeof(int*));
+  int* temp;
+  int i;
+
+  for (i = 0; i < m; i++)
+  {
+    temp = (int *) calloc (n, sizeof(int));
+    table[i] = temp;
+  }
+
+  return table;
+}
+
+// free memory of table
+void deleteDP (int** table, int m, int n)
+{
+  int i;
+  for (i = 0; i < m; i++)
+  {
+    free(table[i]);
+  }
+  free(table);
 }
 
 int main(int argc, char* argv[])
@@ -123,7 +136,7 @@ int main(int argc, char* argv[])
   int m = atoi(argv[3]);
 
   // determine function-pointer for cost function
-  int (*costFunc)(int,int,char,char);
+  int (*costFunc)(char,char);
   if (m == 0)
     costFunc = unity;
   else if (m == 1)
@@ -134,7 +147,7 @@ int main(int argc, char* argv[])
   printf("Sequenz 1: %s\n", s1);
   printf("Sequenz 2: %s\n", s2);
   // reserve memory for dynamic programing table
-  int* table = (int *) malloc((len1+1)*(len2+1)*sizeof(int));
+  int** table = initializeDP (len1+1, len2+1);
   // calculate costs for optimal alignment of s1 and s2
   int costs = align (table, s1, len1, s2, len2, costFunc);
   // print dynamic programing table
@@ -145,7 +158,7 @@ int main(int argc, char* argv[])
   {
     for (j = 0; j <= len2; j++)
     {
-      c = table[i*(len2+1)+j];
+      c = table[i][j];
       if (c == INF)
         c = -1;
       printf("%2d ", c);
@@ -154,8 +167,9 @@ int main(int argc, char* argv[])
   }
   printf("------------------------------------------------------\n");
   
-  // backtracking for printing the optimal alignment
   printf("Alignment: %d\n", costs);
+
+  deleteDP (table, len1+1, len2+1);
 
   return 0;
 }
