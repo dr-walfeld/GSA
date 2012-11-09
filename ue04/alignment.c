@@ -3,10 +3,6 @@
 #include <string.h>
 #include "alignment.h"
 
-#define INF 1000000
-
-int unit_cost (char, char);
-
 // erzeugt neues Multiedit und gibt es zurueck;
 // als Parameter wird die Operation erwartet
 multiedit* multiedit_new (char operation)
@@ -101,15 +97,6 @@ int alignment_add_replacement (alignment* a)
 int alignment_add_replacements (alignment* a, int length)
 {
   return alignment_add_operations (a, 'R', length);
-}
-
-int unit_cost (char a, char b)
-{
-  if (a == '-' || b == '-')
-    return 1;
-  else if (a == b)
-    return 0;
-  return 1;
 }
 
 // evaluate the alignment costs
@@ -270,6 +257,17 @@ void alignment_delete (alignment* a)
   a = NULL;
 }
 
+#ifdef UNIT_TEST
+int unit_cost (char, char);
+
+int unit_cost (char a, char b)
+{
+  if (a == '-' || b == '-')
+    return 1;
+  else if (a == b)
+    return 0;
+  return 1;
+}
 
 int main(int argc, char * ARGV[])
 {
@@ -296,3 +294,4 @@ int main(int argc, char * ARGV[])
   alignment_delete (al);
   return 0;
 }
+#endif

@@ -1,4 +1,4 @@
-CFLAGS=-Wall -Werror -O2
+CFLAGS+=-Wall -Werror -O2 -DUNIT_TEST
 
 all: alignment a43
 

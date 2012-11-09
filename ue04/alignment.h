@@ -1,3 +1,7 @@
+#ifndef ALIGNMENT
+#define ALIGNMENT
+
+#define INF 1000000
 
 // Definition der Struktur fuer eine Multi-Edit-Operation
 typedef struct {
@@ -33,4 +37,4 @@ int alignment_add_replacements (alignment*, int);
 int alignment_evalcost (alignment*, int(*)(char,char));
 int alignment_show (alignment*);
 void alignment_delete (alignment*);
-
+#endif
