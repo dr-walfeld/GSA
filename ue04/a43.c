@@ -96,13 +96,11 @@ int align (int** table, char* s1, int len1, char* s2, int len2, int (*costFunc)(
 int** initializeDP (int m, int n)
 {
   int** table = (int **) calloc (m, sizeof(int*));
-  int* temp;
   int i;
 
   for (i = 0; i < m; i++)
   {
-    temp = (int *) calloc (n, sizeof(int));
-    table[i] = temp;
+    table[i] = (int *) calloc (n, sizeof(int));
   }
 
   return table;
@@ -124,7 +122,7 @@ int main(int argc, char* argv[])
   // check argument count
   if (argc < 4)
   {
-    printf("FEHLER: zu wenig Argumente angegeben!");
+    printf("FEHLER: zu wenig Argumente angegeben\n!");
     return 1;
   }
   
@@ -154,14 +152,36 @@ int main(int argc, char* argv[])
   printf("------------------------------------------------------\n");
   int i,j;
   int c;
-  for (i = 0; i <= len1; i++)
+  for (i = -1; i <= len1; i++)
   {
-    for (j = 0; j <= len2; j++)
+    for (j = -1; j <= len2; j++)
     {
-      c = table[i][j];
-      if (c == INF)
-        c = -1;
-      printf("%2d ", c);
+      if (i == -1 && j != -1)
+      {
+        if (j == 0)
+          printf("%3c ", '-');
+        else
+          printf("%3c ", s2[j-1]);
+      }
+      else if (j == -1 && i != -1)
+      {
+        if (i == 0)
+          printf("%3c ", '-');
+        else
+          printf("%3c ", s1[i-1]);
+      }
+      else if (i == -1 && j == -1)
+      {
+        printf("%3c ", ' ');
+      }
+      else
+      {
+        c = table[i][j];
+        if (c == INF)
+          printf("%3c ", 'I');
+        else
+          printf("%3d ", c);
+      }
     }
     printf("\n");
   }
