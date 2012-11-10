@@ -4,13 +4,13 @@
 #define INF 1000000
 
 // Definition der Struktur fuer eine Multi-Edit-Operation
-typedef struct multieditStruct {
+typedef struct {
   int stretch;
   char operation;
 } multiedit;
 
 // Definition der Struktur fuer ein Alignment
-typedef struct alignmentStruct {
+typedef struct {
   char* s1;
   int len1;
   char* s2;
