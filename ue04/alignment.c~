@@ -297,7 +297,7 @@ int main(int argc, char * ARGV[])
     printf ("Fehler beim Ausgeben des Alignments (Alignment inkonsistent)!\n");
   }
 
-  printf ("Länge des Alignments (Länge der Multiedit-Liste): %d (%d)\n", \
+  printf ("Länge des Alignments (Länge der Multiedit-Liste): %d (%d) \n", \
       al->length, al->editlength);
 
   int costs = alignment_evalcost (al, unit_cost);
