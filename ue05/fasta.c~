@@ -65,7 +65,7 @@ void fasta_add_base (fasta* f, char base)
   }
   f->sequence[f->length] = base;
   // 0-terminator does not elong string
-  if (ch != '\0')
+  if (base != '\0')
     f->length++;
 }
 
