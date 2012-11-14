@@ -97,11 +97,24 @@ int alignment_add_replacements (alignment* a, int length)
   return alignment_add_operations (a, 'R', length);
 }
 
+void alignment_reverse(alignment* a)
+{
+  int half = a->editlength/2-1;
+  int i;
+  multiedit* temp;
+  for (i = 0; i <= half; i++)
+  {
+    temp = a->edits[i];
+    a->edits[i] = a->edits[a->editlength-1-i];
+    a->edits[a->editlength-1-i] = temp;
+  }
+}
+
 // evaluate the alignment costs
 // takes pointer to alignment and function pointer to cost-function
 int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
 {
-  int costs = 0
+  int costs = 0;
   int i,j;
   
   // use two indices (one for each sequence)
@@ -177,11 +190,15 @@ int alignment_show (alignment* a)
     // apply all single edit-operations
     for (j = 0; j < me->stretch; j++)
     {
+      //printf("%c\n", me->operation);
       // check nature of edit operation
       if (me->operation == 'R')
       {
         if (a->s1[index1] == '\0' || a->s2[index2] == '\0')
+        {
+          printf ("index1=%d, index2=%d",index1,index2);
           return 1;
+        }
         // chekc euqality of bases for replacement operation
         if (a->s1[index1] == a->s2[index2])
         {
@@ -199,7 +216,10 @@ int alignment_show (alignment* a)
       else if (me->operation == 'I')
       {
         if (a->s2[index2] == '\0')
+        {
+          printf("index2=%d\n",index2);
           return 1;
+        }
         print_s1[printindex] = '-';
         print_s2[printindex] = a->s2[index2];
         print_bt[printindex] = ' ';
@@ -208,7 +228,10 @@ int alignment_show (alignment* a)
       else
       {
         if (a->s1[index1] == '\0')
+        {
+          printf("index1=%d\n",index1);
           return 1;
+        }
         print_s1[printindex] = a->s1[index1];
         print_s2[printindex] = '-';
         print_bt[printindex] = ' ';
@@ -269,21 +292,25 @@ int unit_cost (char a, char b)
 
 int main(int argc, char * ARGV[])
 {
-  char s1[] = "acgtagatatatagat";
+  if (argc < 5 || argc%2 == 0)
+  {
+    printf("FEHLER: falsche Anzahl Argumente!\n");
+    return 1;
+  }
+
+  char * s1 = ARGV[1];
   int len1 = strlen(s1);
-  char s2[] = "agaaagaggtaagaggga";
+  char * s2 = ARGV[2];
   int len2 = strlen(s2);
 
-  alignment *al = alignment_new (s1, len1, s2, len2);
-
   int ops = 0;
-  ops |= alignment_add_replacements (al, 7);
-  ops |= alignment_add_insertions (al, 2);
-  ops |= alignment_add_replacements (al, 2);
-  ops |= alignment_add_deletion (al);
-  ops |= alignment_add_replacements (al, 3);
-  ops |= alignment_add_insertion (al);
-  ops |= alignment_add_replacements (al, 3);
+
+  int i;
+  alignment *al = alignment_new (s1, len1, s2, len2);
+  for (i = 3; i < argc; i+=2)
+  {
+    ops |= alignment_add_operations (al, ARGV[i][0], atoi(ARGV[i+1]));
+  }
 
   if (ops)
   {
