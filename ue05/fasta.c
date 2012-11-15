@@ -197,6 +197,13 @@ multifasta* read_fasta_file (char* filename)
           header = 0;
         }
       }
+      else
+      {
+        fclose(filestream);
+        puts("ERROR: non-fasta conform line detected!");
+        multifasta_delete (mfast);
+        return NULL;
+      }
     }
     // if we didn't start a newline
     else

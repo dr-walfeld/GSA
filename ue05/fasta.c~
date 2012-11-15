@@ -212,7 +212,7 @@ multifasta* read_fasta_file (char* filename)
           comment = 0;
         }
       }
-      if (header)
+      else if (header)
       {
         // if there is no newline => add it to sequence header
         if (!newline)
