@@ -97,6 +97,7 @@ int alignment_add_replacements (alignment* a, int length)
   return alignment_add_operations (a, 'R', length);
 }
 
+// reverse the order of the alignment
 void alignment_reverse(alignment* a)
 {
   int half = a->editlength/2-1;

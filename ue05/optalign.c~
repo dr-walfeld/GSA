@@ -2,24 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "alignment.h"
-#include "fasta.h"
-
-#define MIN(a,b,c) (a <= b ? (a <= c ? a : c) : (b <= c ? b : c))
-#define INF 1000000
-
-typedef struct alignentryStruct {
-  int value;
-  int north;
-  int west;
-  int northwest;
-} alignentry;
-
-int align (alignentry***, char*, int, char*, int, int (*) (char,char));
-int unity (char, char);
-int hamming (char, char);
-int otherCosts (char, char);
-alignentry*** initializeDP (int, int);
-void deleteDP (alignentry***, int, int);
+#include "optalign.h"
 
 // unit cost function
 int unity (char c1, char c2)
@@ -176,6 +159,7 @@ int traceback (alignentry*** table, alignment* a, int i, int j)
   return 0;
 }
 
+#ifdef UNIT_TEST
 int main(int argc, char* argv[])
 {
   
@@ -185,28 +169,13 @@ int main(int argc, char* argv[])
     printf("FEHLER: zu wenig Argumente angegeben\n!");
     return 1;
   }
-  /*
+  
   // read sequences and m (cost function) from command line
   char* s1 = argv[1];
   int len1 = strlen(s1);
   char* s2 = argv[2];
   int len2 = strlen(s2);
   int m = atoi(argv[3]);
-  */
-
-  int m = atoi(argv[3]);
-  multifasta* mf1 = read_fasta_file (argv[1]);
-  multifasta* mf2 = read_fasta_file (argv[2]);
-
-  if (mf1 == NULL || mf2 == NULL)
-    return 1;
-
-  char* s1 = mf1->entries[0]->sequence;
-  int len1 = mf1->entries[0]->length;
-  char* s2 = mf2->entries[0]->sequence;
-  int len2 = mf2->entries[0]->length;
-  char* h1 = mf1->entries[0]->header;
-  char* h2 = mf2->entries[0]->header;
 
   // determine function-pointer for cost function
   int (*costFunc)(char,char);
@@ -217,8 +186,8 @@ int main(int argc, char* argv[])
   else
     costFunc = otherCosts;
 
-  printf("Sequenz 1: %s\n%s\n", h1,s1);
-  printf("Sequenz 2: %s\n%s\n", h2,s2);
+  printf("Sequenz 1: %s\n", s1);
+  printf("Sequenz 2: %s\n", s2);
   // reserve memory for dynamic programing table
   alignentry*** table = initializeDP (len1+1, len2+1);
   // calculate costs for optimal alignment of s1 and s2
@@ -275,3 +244,4 @@ int main(int argc, char* argv[])
 
   return 0;
 }
+#endif

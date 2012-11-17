@@ -15,6 +15,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
+  // read fasta file
   multifasta* mf = read_fasta_file (argv[1]);
   int m = atoi(argv[2]);
 
@@ -40,6 +41,7 @@ int main(int argc, char* argv[])
   else
     costFunc = otherCosts;
 
+  // initialze alignment-matrix
   int i,j;
   int size = mf->length;
   int** alignmatrix = (int**) malloc(size*sizeof(int*));
@@ -48,10 +50,12 @@ int main(int argc, char* argv[])
     alignmatrix[i] = (int*) calloc(size,sizeof(int));
   }
 
+  // calculate alignments => fill alignment-matrix
   for (i = 0; i < size; i++)
   {
     s1 = mf->entries[i]->sequence;
     len1 = mf->entries[i]->length;
+    printf("entry %d: %s\n", i, mf->entries[i]->header);
     for (j = i+1; j < size; j++)
     {
       s2 = mf->entries[j]->sequence;
@@ -67,21 +71,39 @@ int main(int argc, char* argv[])
     }
   }
 
-  for (i = 0; i < size; i++)
+  // print alignment-matrix
+  for (i = -1; i < size; i++)
   {
-    for (j = 0; j < size; j++)
+    for (j = -1; j < size; j++)
     {
-      printf("%5d ", alignmatrix[i][j]);
+      if (i == -1 && j == -1)
+      {
+        printf("%5c ", ' ');
+      }
+      else if (i == -1)
+      {
+        printf("%4dE ", j);
+      }
+      else if (j == -1)
+      {
+        printf("%4dE ", i);
+      }
+      else
+      {
+        printf("%5d ", alignmatrix[i][j]);
+      }
     }
     printf("\n");
   }
 
+  // free alignmentmatrix
   for (i = 0; i < size; i++)
   {
     free (alignmatrix[i]);
   }
   free (alignmatrix);
 
+  // free multifasta
   multifasta_delete(mf);
 
   return 0;

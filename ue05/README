@@ -1,0 +1,61 @@
+alignment.c, alignment.h
+Repräsentation des Alignments als Multiedit-Operation (von Übungszettel 4);
+ergänzt um Prozedur alignment_reverse, die Reihenfolge der Multiedit-Operationen
+umkehrt; nützlich für Backtracking
+
+make erzeugt mit option -DUNIT_TEST alignment_test
+nimmt als Parameter 2 Sequenzen und Multiedit-Operationen (z.B. R 7 I 2 D 3)
+(Unit, Hamming, andere Kosten von Übungszettel 3)
+
+Test-Aufruf mit test_alignment
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+optalign.c, optalign.h
+Berechnung der DP-Matrix für das optimale Alignment (von Übungszettel 3);
+ergänzt um Speicherung der Richtung (für minimierende Kanten) mit struct;
+Implementierung der Back-Tracking Methode zur Bestimmung des optimalen
+Alignments; nutzt die Alignment-Struktur aus alignment.c
+
+make erzeugt mit option -DUNIT_TEST optalign_test
+nimmt als Parameter 2 Sequenzen und Nummer 0-2 für Kostenfunktion
+(Unit, Hamming, andere Kosten von Übungszettel 3)
+gibt Kosten und DP-Matrix aus
+
+Test-Aufruf mit test_optalign
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+fasta.c, fasta.h
+Einlesen einer (Multi-)Fasta-Datei; liest korrekt formatierte Fasta-Dateien ein
+und erzeugt struct (mit Sequenz, Header und deren Länge)
+
+make erzeugt mit option -DUNIT_TEST fasta_test
+nimmt als Parameter Dateiname für FASTA-Datei
+gibt Inhalt (Header und Sequenzen) aus
+
+Test-Aufruf (korrekte und inkorrekte FASTA-Dateien) mit test_fasta
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+main_a51.c
+Aufgabe 5.1
+Liest Multi-Fasta-Datei ein, berechnet das Paarweise-Alignment aller Sequenzen
+und gibt die Kosten in einer Tabelle aus
+
+Aufruf mit
+a51 test.fasta
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+main_a53.c
+Aufgabe 5.3
+Liest (Multi)-Fasta-Datei ein und berechnet das optimale Alignment der jeweils
+ersten Sequenz in der Datei. Gibt die DP-Matrix und die Kosten des Alignments
+sowie das Alignment aus.
+
+nimmt als Parameter 2 (Multi)-Fasta-Dateien und Nummer 0-2 für Kostenfunktion
+(Unit, Hamming, andere Kosten von Übungszettel 3)
+
+Aufruf mit
+a53 seq1.fasta seq2.fasta 0

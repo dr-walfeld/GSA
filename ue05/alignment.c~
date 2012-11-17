@@ -196,7 +196,7 @@ int alignment_show (alignment* a)
       {
         if (a->s1[index1] == '\0' || a->s2[index2] == '\0')
         {
-          printf ("index1=%d, index2=%d",index1,index2);
+          printf ("index1=%d, index2=%d\n",index1,index2);
           return 1;
         }
         // chekc euqality of bases for replacement operation

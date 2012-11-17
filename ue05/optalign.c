@@ -34,6 +34,7 @@ int otherCosts (char c1, char c2)
   return 0;
 }
 
+// create new entry in alignment-table
 alignentry* alignentry_new (int value, int west, int north, int northwest)
 {
   alignentry* temp = (alignentry*) malloc(sizeof(alignentry));

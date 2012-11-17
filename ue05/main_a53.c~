@@ -89,7 +89,7 @@ int main(int argc, char* argv[])
 
   alignment* align = alignment_new(s1,len1,s2,len2);
   traceback(table,align,len1,len2);
-  printf("Alignment-Kosten (check): %d\n", alignment_evalcost(align,costFunc));
+  printf("Alignment-Kosten (check): %d\n", alignment_evalcosts(align,costFunc));
   if (alignment_show(align))
   {
     puts("FEHLER: inkonsistentes Alignment!");
