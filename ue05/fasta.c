@@ -1,3 +1,10 @@
+/*
+   Einlesen von (Multi-)Fasta-Dateien und Speicherung der Sequenzen
+   und Header; Compilieren mit Direktive UNIT_TEST für Test
+   Aufruf mit FASTA-Dateiname;
+   gibt die Sequenzen mit ihren Headern aus
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

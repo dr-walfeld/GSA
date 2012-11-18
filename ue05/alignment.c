@@ -1,3 +1,10 @@
+/*
+   Repraesentation von Alignments durch eine Folge von Multiedit-Operationen
+   fuer Test: Compilieren mit UNIT_TEST Direktive;
+   Test-Aufruf mit zwei Sequenzen und folge von Multiedit-Operationen
+   z.B. AGTGA AGTGA 2 R 3 I   
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

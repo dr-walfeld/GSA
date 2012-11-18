@@ -1,3 +1,17 @@
+/*
+   Berechnung des optimalen Alignments zweier Sequenzen mit
+   benutzerdefinierter Kostenfunktion;
+   Berechnung der beiden DP-Tabelle und Traceback;
+   nutzt Alignment-Repraesentation (alignment.h) zur Speicherung
+   eines optimalen Alignments;
+
+   Compilieren mit Direktive DUNIT_TEST fuer Test;
+   als Parameter zwei Sequenzen und Kostenfunktion
+   (0: Unit, 1: Hamming);
+   gibt DP-Matrix, Kosten des optimalen Alignments 
+   und ein optimales Alignment aus;
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -82,7 +96,7 @@ int align (alignentry*** table, char* s1, int len1, char* s2, int len2, int (*co
     {
       a = table[i][j-1]->value + gap;
       b = table[(i-1)][j]->value + gap;
-      c = table[(i-1)][j-1]->value + costFunc (s1[i-1], s2[j-1]);
+      c = table[(i-1)][j-1]->value + costFunc ((s1[i-1]), (s2[j-1]));
       cost = MIN(a,b,c);
       north = 0;
       west = 0;

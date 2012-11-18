@@ -1,3 +1,13 @@
+/*
+   Aufgabe 5.1
+
+   liest Multi-Fasta-Datei (fasta.h) ein und gibt das paarweise optimale 
+   Alignment (alignment.h)aller Eintraege in der Multifasta-Datei aus
+
+   als Parameter werden die Fasta-Datei und die Kostenfunktion
+   (0: Unit, 1: Hamming) angegeben
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

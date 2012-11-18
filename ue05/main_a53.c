@@ -1,3 +1,13 @@
+/*
+   Aufgabe 5.3
+
+   Liest die ersten Eintraege zweiter (Multi)Fasta-Dateien ein
+   und berechnet das optimale Alignment; ein optimales Alignment wird ausgegeben;
+
+   als Parameter werden zwei FASTA-Dateien und die Kostenfunktion
+   (0: Unit, 1: Hamming) angegeben
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
