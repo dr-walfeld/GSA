@@ -4,6 +4,7 @@
 
 #define INF 1000000
 
+// return weighting or INF is character does not exist
 int get_weight (char c)
 {
   switch (c)
@@ -42,6 +43,10 @@ void find_substrings (char* sequence, int len, int tweight, int (*weightFunc) (c
     {
       if (r < len)
         weight += weightFunc(sequence[r]);
+      if (weight >= INF)
+      {
+        printf("ERROR: weight of %c is not defined!\n", sequence[r]);
+      }
       r++;
     }
     else if (weight > tweight)
@@ -72,6 +77,7 @@ int main (int argc, char * argv[])
     return 0;
   }
 
+  // read sequence and target weight from command line
   char* seq = argv[1];
   int weight;
   int len = strlen(seq);

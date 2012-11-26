@@ -69,10 +69,12 @@ int score (int** matrix, char a, char b)
   return score;
 }
 
+// read scorematrix from file
 int** read_scorematrix (char* filename)
 {
   char ch;
   char line[LINE];
+  // open file
   FILE * filestream = fopen (filename, "rt");
   char *wordptr;
   int score;
@@ -82,12 +84,14 @@ int** read_scorematrix (char* filename)
 
   int firstline = 1;
 
+  // if opening of file failes
   if (filestream == NULL)
   {
     printf("ERROR: could not open file %s!\n", filename);
     return NULL;
   }
 
+  // initialize allscorematrix (with A-Z)
   int** matrix = initialize_scorematrix (26);
   int position[26];
   int usedcol[26];
@@ -100,6 +104,7 @@ int** read_scorematrix (char* filename)
     usedrow[i] = 0;
   }
 
+  // read lines
   while (fgets(line, LINE, filestream) != NULL)
   {
     i = 0;
@@ -107,12 +112,14 @@ int** read_scorematrix (char* filename)
     if (line[0] != '\n')
     {
       line[strlen(line)-1] = '\0'; // remove trailing \n
+      // split line at blank
       wordptr = strtok(line, " ");
       while (wordptr != NULL)
       {
-        //printf("%s\n", wordptr);
+        // if firstline
         if (firstline)
         {
+          // look for characters
           if (sscanf(wordptr, "%c", &ch) == 0)
           {
             puts("ERROR: no character found");
@@ -125,6 +132,7 @@ int** read_scorematrix (char* filename)
             printf("ERROR: symbol %c is not allowed\n", ch);
             return NULL;
           }
+          // check if character has been used
           if (usedcol[ch-'A'])
           {
             printf("ERROR: symbol %c used more than once in columns\n", ch);
@@ -133,10 +141,13 @@ int** read_scorematrix (char* filename)
           position[i] = ch;
           usedcol[ch-'A'] = 1; // to determine used chars
         }
+        // if not firstline
         else
         {
+          // first field of each line is character
           if (i == 0)
           {
+            // if no character
             if(sscanf(wordptr, "%c", &ch) == 0)
             {
               puts("ERROR: no character found");
@@ -149,7 +160,7 @@ int** read_scorematrix (char* filename)
               return NULL;
             }
             
-            // check if entry in first row is unset
+            // check if entry is unset
             if (!usedcol[ch-'A'])
             {
               printf("ERROR: symbol %c is used in row dimension only\n", ch);
@@ -165,6 +176,7 @@ int** read_scorematrix (char* filename)
             usedrow[ch-'A'] = 1;
             linecount += 1;
           }
+          // if not first character
           else
           {
             if (sscanf(wordptr, "%d", &score) == 0)
@@ -173,7 +185,6 @@ int** read_scorematrix (char* filename)
               return NULL;
             }
 
-            //printf("%d, %d; %d\n", i-1, position[i-1],len);
             if (i-1 >= len)
             {
               puts("ERROR: more entries than allowed detected");
@@ -191,6 +202,7 @@ int** read_scorematrix (char* filename)
           }
         }
 
+        // read nect field
         wordptr = strtok(NULL, " ");
         i++;
       }
@@ -212,7 +224,7 @@ int** read_scorematrix (char* filename)
      must match line count */
   if (linecount != len)
   {
-    printf("ERROR: a symbol is used in column dimension only\n", ch);
+    printf("ERROR: a symbol is used in column dimension only\n");
     return NULL;
   }
 

@@ -21,7 +21,15 @@ int get_weight (char c)
   }
 }
 
-// find weighted substrings of a sequence with length N in O(N)
+/* find weighted substrings of a sequence with length N in O(N)
+   requirement: weights are always positive integer so the
+   addition of an element ALWAYS increases the weight and the
+   deletion of an element ALWAYS decreases the weight
+   => one can simply walk over the sequence and add the next
+      element if the weight is smaller than the target and
+      remove the first element of the substring if the weight
+      is bigger than the target 
+*/
 void find_substrings (char* sequence, int len, int tweight, int (*weightFunc) (char))
 {
   int r = 0;
@@ -47,11 +55,11 @@ void find_substrings (char* sequence, int len, int tweight, int (*weightFunc) (c
       // l is no more part of the substring) but r (so
       // length is r-1-l+1) because r is part of the substring
       printf("(%d,%d)\n", l+1, r-l);
+      // always positive integers so r+1 OR l+1 is never a match
       weight += weightFunc(sequence[r]);
       weight -= weightFunc(sequence[l]);
       r++;
       l++;
-      // always positive integers so r+1 OR l+1 is never a match
     }
   }
 }
