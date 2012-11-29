@@ -1,0 +1,22 @@
+CFLAGS+=-Wall -Werror -O2 #-DUNIT_TEST
+
+all: scorematrix_test fasta_test alignment_test optalign_test
+
+fasta.o: fasta.h
+alignment.o: alignment.h
+optalign.o: optalign.h alignment.h scorematrix.h
+scorematrix.o: scorematrix.h
+
+fasta_test: fasta.c fasta.h
+	gcc ${CFLAGS} -DUNIT_TEST -o $@ $+
+alignment_test: alignment.c alignment.h
+	gcc ${CFLAGS} -DUNIT_TEST -o $@ $+
+optalign_test.o: optalign.c optalign.h alignment.h scorematrix.h
+	gcc ${CFLAGS} -c -DUNIT_TEST -o $@ optalign.c
+optalign_test: optalign_test.o alignment.o scorematrix.o
+	gcc ${LDFLAGS} -o $@ $+
+scorematrix_test: scorematrix.c scorematrix.h
+	gcc ${CFLAGS} -DUNIT_TEST -o $@ $+
+
+clean:
+	-rm -f scorematrix_test fasta_test alignment_test optalign_test optalign_test.o
