@@ -19,14 +19,6 @@
 #include "optalign.h"
 #include "scorematrix.h"
 
-int get_score (scorematrix* sm, char a, char b)
-{
-  static scorematrix* mysm;
-  if (sm != NULL)
-    mysm = sm;
-  return score(mysm,a,b);
-}
-
 // create new entry in alignment-table
 alignentry* alignentry_new (int value, int west, int north, int northwest)
 {
@@ -39,7 +31,7 @@ alignentry* alignentry_new (int value, int west, int north, int northwest)
 }
 
 // fill DP-table
-int align (alignentry*** table, char* s1, int len1, char* s2, int len2, int (*scoreFunc)(scorematrix*,char,char), int* pimax, int* pjmax)
+int align (alignentry*** table, char* s1, int len1, char* s2, int len2, scorematrix* sm, int* pimax, int* pjmax)
 {
   // simultanously dertermine maximum values
   int max = -1;
@@ -50,7 +42,7 @@ int align (alignentry*** table, char* s1, int len1, char* s2, int len2, int (*sc
   int score = 0;
   int a,b,c,north,west,northwest;
 
-  int indel = scoreFunc(NULL, '-', '-');
+  int indel = get_score (sm, '-', '-');
 
   // fill first columns of all rows
   for (i = 0; i <= len1; i++)
@@ -73,7 +65,7 @@ int align (alignentry*** table, char* s1, int len1, char* s2, int len2, int (*sc
     {
       a = table[i][j-1]->value + indel;
       b = table[(i-1)][j]->value + indel;
-      c = table[(i-1)][j-1]->value + scoreFunc (NULL, (s1[i-1]), (s2[j-1]));
+      c = table[(i-1)][j-1]->value + get_score (sm, (s1[i-1]), (s2[j-1]));
       // maximize over a,b,c AND 0 (Smith-Waterman)
       score = MAX(MAX(MAX(0,c),b),a);
       // determine maxvalue
@@ -159,6 +151,8 @@ int traceback (alignentry*** table, alignment* a, int i, int j)
       j--;
     }
   }
+  a->firstindex1 = i+1-1;
+  a->firstindex2 = j+1-1; 
   alignment_reverse (a);
   return 0;
 }
@@ -227,14 +221,13 @@ int main(int argc, char* argv[])
   scorematrix* sm = read_scorematrix(filename,indel);
   if (sm == NULL)
     return 1;
-  get_score(sm,'-','-');
 
   // reserve memory for dynamic programing table
   alignentry*** table = initializeDP (len1+1, len2+1);
 
   // calculate costs for optimal alignment of s1 and s2
   int imax,jmax;
-  int score = align (table, s1, len1, s2, len2, get_score, &imax, &jmax);
+  int score = align (table, s1, len1, s2, len2, sm, &imax, &jmax);
   // print dynamic programing table
   show_DPtable(s1,len1,s2,len2,table);
   printf("Alignment: %d\n", score);

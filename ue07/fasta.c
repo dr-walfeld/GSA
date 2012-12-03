@@ -8,42 +8,11 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "fasta.h"
 
 #define MAX_LINE 1024
-
-int isBase(char);
-
-// check if character is base
-int isBase(char c)
-{
-  switch (c)
-  {
-    case 'A':
-      return 1;
-    case 'a':
-      return 1;
-    case 'C':
-      return 1;
-    case 'c':
-      return 1;
-    case 'G':
-      return 1;
-    case 'g':
-      return 1;
-    case 'T':
-      return 1;
-    case 't':
-      return 1;
-    case 'U':
-      return 1;
-    case 'u':
-      return 1;
-    default:
-      return 0;
-  }
-}
 
 // generate new fasta-entry
 fasta* fasta_new (int csize)
@@ -195,7 +164,7 @@ multifasta* read_fasta_file (char* filename)
         comment = 1;
       }
       // if a base is the first character
-      else if (isBase(ch))
+      else if (isalpha(ch))
       {
         // if already a sequence is beeing read => just add base
         if (sequence)
@@ -257,7 +226,7 @@ multifasta* read_fasta_file (char* filename)
       // thats ok because after a sequence started, there is never (header)
       else if (sequence)
       {
-        if (isBase(ch))
+        if (isalpha(ch))
           fasta_add_base(seq, ch);
         else if (!newline && ch != EOF)
         {

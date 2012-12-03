@@ -12,7 +12,7 @@ typedef struct alignentryStruct {
   int northwest;
 } alignentry;
 
-int align (alignentry***, char*, int, char*, int, int (*) (scorematrix*, char,char),int*,int*);
+int align (alignentry***, char*, int, char*, int, scorematrix* sm,int*,int*);
 alignentry*** initializeDP (int, int);
 void deleteDP (alignentry***, int, int);
 alignentry* alignentry_new (int, int, int, int);

@@ -1,0 +1,5 @@
+echo "Test mit BLOSUM62"
+./scorematrix_test BLOSUM62 -5
+
+echo "Test mit EBLOSUM62 aus EBI EBOSS (mit Kommentar und Stop-Codon)"
+./scorematrix_test EBLOSUM62 -5

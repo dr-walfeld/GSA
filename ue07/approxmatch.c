@@ -26,14 +26,15 @@ int unity(char a, char b)
 */
 void approxsearch(int k, char* p, int plen, char* t, int tlen, int (*costFunc) (char, char))
 {
-  int i,j,oldij,oldlen,newlen,len;
+  int i,j,oldij,oldlen,len;
   int a,b,c,min;
+  int newlen = 0;
   int gap = costFunc('\001','\001');
   
   // initialize vectors and match
   int* vec = (int *) malloc((plen+1)*sizeof(int));
   int* lenvec = (int *) calloc((plen+1), sizeof(int));
-  char* match = (char* ) malloc((plen+1)*sizeof(char));
+  char* match = (char *) malloc((tlen+1)*sizeof(char));
 
   vec[0] = 0; // initialize 0,0
   // all columns
@@ -86,6 +87,9 @@ void approxsearch(int k, char* p, int plen, char* t, int tlen, int (*costFunc) (
       printf("match ends at %d with length %d: %s matches %s\n",j, lenvec[i-1], match, p);
     }
   }
+
+  free (vec);
+  free (lenvec);
 }
 
 int main(int argc, char* argv[])

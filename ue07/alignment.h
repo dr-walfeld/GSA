@@ -3,6 +3,8 @@
 
 #define INF 1000000
 
+#include "scorematrix.h"
+
 // Definition der Struktur fuer eine Multi-Edit-Operation
 typedef struct multieditStruct {
   int stretch;
@@ -15,6 +17,11 @@ typedef struct alignmentStruct {
   int len1;
   char* s2;
   int len2;
+
+  int firstindex1;
+  int lastindex1;
+  int firstindex2;
+  int lastindex2;
 
   multiedit** edits;
   int editlength;
@@ -34,7 +41,7 @@ int alignment_add_insertion (alignment*);
 int alignment_add_insertions (alignment*, int);
 int alignment_add_replacement (alignment*);
 int alignment_add_replacements (alignment*, int);
-int alignment_evalcost (alignment*, int(*)(char,char));
+int alignment_evalscore (alignment*, scorematrix* sm);
 int alignment_show (alignment*);
 void alignment_reverse (alignment*);
 void alignment_delete (alignment*);

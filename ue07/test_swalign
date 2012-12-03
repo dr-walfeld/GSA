@@ -1,0 +1,2 @@
+echo "Alignment von einer Testsequenz an murines Col7a mit EBLOSUM62"
+./swalign -10 EBLOSUM62 ./testdata/col7.fasta ./testdata/toalign.fasta

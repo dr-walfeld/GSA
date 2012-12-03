@@ -8,7 +8,7 @@ typedef struct scorematrixStruct {
 
 scorematrix* initialize_scorematrix (int,int);
 void delete_scorematrix(scorematrix*);
-int score (scorematrix*, char, char);
+int get_score (scorematrix*, char, char);
 scorematrix* read_scorematrix (char*,int);
 void show_scorematrix(scorematrix*);
 

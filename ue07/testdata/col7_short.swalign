@@ -1,0 +1,12 @@
+Alignment von einer Testsequenz an murines Col7a mit EBLOSUM62
+Sequenz 1: gi|2326168|gb|AAB66593.1| type VII collagen [Mus musculus]
+Sequenz 2: gi|2326168|gb|AAB66593.1| type VII collagen [Mus musculus]
+Alignment-Score: 233
+Alignment-Score (check): 233
+VSIVITTPPATPALLETLQVVQSGEHSLRLRWEPVPGAPGFRLHWQPEGGQEQSLTLGPESNSYNLVGLE
+|||||||||||||||||||||||         |||||||||||    |        | |    |||||||
+VSIVITTPPATPALLETLQVVQSMQERTSVEREPVPGAPGFRL----E-SNSY-IKLMPQ---YNLVGLE
+
+PATKYQVWLTVLGQTGEGPPRKVTAYTEPSH
+|||||||||||||       ||| |||||  
+PATKYQVWLTVLGKLPQNNMRKVEAYTEPRY

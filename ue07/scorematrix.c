@@ -48,21 +48,27 @@ void delete_scorematrix(scorematrix* sm)
   free(sm);
 }
 
-int score (scorematrix* sm, char a, char b)
+int get_score (scorematrix* sm, char a, char b)
 {
   if (a == '-' || b == '-')
     return sm->indel;
 
   a = toupper(a);
   b = toupper(b);
+
+  if (a == '*')
+    a = '[';
+  if (b == '*')
+    b = '[';
+
   int score;
 
-  if (!isupper(a))
+  if (!isupper(a) && a != '[')
   {
     printf("ERROR: %c is not an allowed character!\n",a);
     return INF;
   }
-  if (!isupper(b))
+  if (!isupper(b) && b != '[')
   {
     printf("ERROR: %c is not an allowed character!\n",b);
     return INF;
@@ -98,13 +104,14 @@ scorematrix* read_scorematrix (char* filename, int indel)
     return NULL;
   }
 
-  // initialize allscorematrix (with A-Z)
-  scorematrix* sm = initialize_scorematrix (26,indel);
-  int position[26];
-  int usedcol[26];
-  int usedrow[26];
+  // initialize allscorematrix (with A-Z) und *
+  // * will be replaced by [ (following Z)
+  scorematrix* sm = initialize_scorematrix (27,indel);
+  int position[27];
+  int usedcol[27];
+  int usedrow[27];
 
-  for (i = 0; i < 26; i++)
+  for (i = 0; i < 27; i++)
   {
     position[i] = -1;
     usedcol[i] = 0;
@@ -115,8 +122,8 @@ scorematrix* read_scorematrix (char* filename, int indel)
   while (fgets(line, LINE, filestream) != NULL)
   {
     i = 0;
-    // empty lines are ignored
-    if (line[0] != '\n')
+    // empty lines and commentary # are ignored
+    if (line[0] != '\n' && line[0] != '#')
     {
       line[strlen(line)-1] = '\0'; // remove trailing \n
       // split line at blank
@@ -130,23 +137,31 @@ scorematrix* read_scorematrix (char* filename, int indel)
           if (sscanf(wordptr, "%c", &ch) == 0)
           {
             puts("ERROR: no character found");
+            fclose (filestream);
             return NULL;
           }
           // only uppercase or lowercase letters are isupper after toupper
           ch = toupper(ch);
-          if (!isupper(ch))
+          if (isupper(ch) || ch == '*')
+          {
+            if (ch == '*')
+              ch = '[';
+            // check if character has been used
+            if (usedcol[ch-'A'])
+            {
+              printf("ERROR: symbol %c used more than once in columns\n", ch);
+              fclose (filestream);
+              return NULL;
+            }
+            position[i] = ch;
+            usedcol[ch-'A'] = 1; // to determine used chars
+          }
+          else
           {
             printf("ERROR: symbol %c is not allowed\n", ch);
+            fclose (filestream);
             return NULL;
           }
-          // check if character has been used
-          if (usedcol[ch-'A'])
-          {
-            printf("ERROR: symbol %c used more than once in columns\n", ch);
-            return NULL;
-          }
-          position[i] = ch;
-          usedcol[ch-'A'] = 1; // to determine used chars
         }
         // if not firstline
         else
@@ -158,30 +173,40 @@ scorematrix* read_scorematrix (char* filename, int indel)
             if(sscanf(wordptr, "%c", &ch) == 0)
             {
               puts("ERROR: no character found");
+              fclose (filestream);
               return NULL;
             }
             ch = toupper(ch);
-            if (!isupper(ch))
+           
+            if (isupper(ch) || ch == '*')
+            { 
+              if (ch == '*')
+                ch = '[';
+              // check if entry is unset
+              if (!usedcol[ch-'A'])
+              {
+                printf("ERROR: symbol %c is used in row dimension only\n", ch);
+                fclose (filestream);
+                return NULL;
+              }
+
+              // check if entry in first column is set (=> double symbol)
+              if (usedrow[ch-'A'])
+              {
+                printf("ERROR: symbol %c used more than once in rows\n", ch);
+                fclose (filestream);
+                return NULL;
+              }
+              usedrow[ch-'A'] = 1;
+              linecount += 1;
+            }
+            else 
             {
               printf("ERROR: symbol %c is not allowed\n", ch);
-              return NULL;
-            }
-            
-            // check if entry is unset
-            if (!usedcol[ch-'A'])
-            {
-              printf("ERROR: symbol %c is used in row dimension only\n", ch);
+              fclose (filestream);
               return NULL;
             }
 
-            // check if entry in first column is set (=> double symbol)
-            if (usedrow[ch-'A'])
-            {
-              printf("ERROR: symbol %c used more than once in rows\n", ch);
-              return NULL;
-            }
-            usedrow[ch-'A'] = 1;
-            linecount += 1;
           }
           // if not first character
           else
@@ -189,12 +214,14 @@ scorematrix* read_scorematrix (char* filename, int indel)
             if (sscanf(wordptr, "%d", &score) == 0)
             {
               puts("ERROR: no score value found");
+              fclose (filestream);
               return NULL;
             }
 
             if (i-1 >= len)
             {
               puts("ERROR: more entries than allowed detected");
+              fclose (filestream);
               return NULL;
             }
 
@@ -209,13 +236,14 @@ scorematrix* read_scorematrix (char* filename, int indel)
           }
         }
 
-        // read nect field
+        // read next field
         wordptr = strtok(NULL, " ");
         i++;
       }
       if (!firstline && i-1 != len)
       {
         puts("ERROR: different number of entries in lines detected!");
+        fclose (filestream);
         return NULL;
       }
       if (firstline)
@@ -232,6 +260,7 @@ scorematrix* read_scorematrix (char* filename, int indel)
   if (linecount != len)
   {
     printf("ERROR: a symbol is used in column dimension only\n");
+    fclose (filestream);
     return NULL;
   }
 
@@ -241,27 +270,27 @@ scorematrix* read_scorematrix (char* filename, int indel)
 void show_scorematrix(scorematrix* sm)
 {
   int i,j,print;
-  for (i = 'A'-1; i <= 'Z'; i++)
+  for (i = 'A'-1; i <= '['; i++)
   {
     print = 0;
-    for (j = 'A'-1; j <= 'Z'; j++)
+    for (j = 'A'-1; j <= '['; j++)
     {
       if (i == 'A'-1 && j == 'A'-1)
       {
         printf("  ");
       }
-      else if (i == 'A'-1 && score(sm,j,'A') < INF)
+      else if (i == 'A'-1 && get_score(sm,j,'A') < INF)
       {
         printf(" %c ", j);
         print = 1;
       }
-      else if (j == 'A'-1 && score(sm,i,'A') < INF)
+      else if (j == 'A'-1 && get_score(sm,i,'A') < INF)
       {
         printf("%c ", i);
         print = 1;
       }
-      else if (i >= 'A' && j >= 'A' && score(sm,i,j) < INF)
-        printf("%2d ", score(sm,i,j));
+      else if (i >= 'A' && j >= 'A' && get_score(sm,i,j) < INF)
+        printf("%2d ", get_score(sm,i,j));
       else
         ;//printf("   ");
     }

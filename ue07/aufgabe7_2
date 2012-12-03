@@ -1,0 +1,33 @@
+alignment.c / .h
+weitesgehend wie in Übung 4, jedoch ohne Kostenfunktion und dafür mit
+Scoringmatrix (Übung 6); zusätzlich wurde die Ausgabe überarbeitet und
+für die Verwendung von Smith-Waterman-Alignments eine Start-Index
+Eigenschaft hinzugefügt
+
+fasta.c /.h
+wie in Übung 5, es wurde nur der Basen-Check gegen Check auf
+Großbuchstabe ausgetauscht
+
+scorematrix.c /.h
+wie in Übung 6, es wurde zusätzlich jedoch die Verwendung von *
+erlaubt und die indel-Kosten im struct gespeichert
+
+optalign.c /.h
+basiert auf Übung 5; Algorithmus wurde in Smith-Waterman umgeschrieben
+(Maximierung über 0), Maxinumermittlung und auch der Traceback beim
+Maximnum gestartet
+
+
+Test des Programms
+
+Testprogramme für die einzelnen Module wurden parallel entwickelt.
+Die Tests erfolgten zum einen mit den Beispielen aus der Vorlesung
+(Instanzen mit bekannter Lösung).
+
+Das Gesamtprogramm wurde zusätzlich mit realen Daten getestet
+(murines Col7a an einen kleinen veränderten Ausschnitt toalign.fasta 
+aligned). Die Ergebnisse wurden verglichen mit den Ausgaben des Programms
+WATER (EBI EMBOSS), welches ein Alignment mit Smith-Waterman
+durchführt. Der ermittelte Score stimmt überein. Das erhaltene
+Alignment stimmt für den Abschnitt ebebnfalls überein
+(col7.water bzw. col7.swalign).

@@ -1,1 +1,1 @@
-./optalign_test acgagtccgatgcaggac agcgtac BLOSUM62 -10
+./optalign_test pqraxabcstvq xyaxbacsll ./testdata/testmatrix -1

@@ -1,0 +1,46 @@
+########################################
+# Program: water
+# Rundate: Sun  2 Dec 2012 22:41:37
+# Commandline: water
+#    -asequence col7_short.fasta
+#    -bsequence toalign_short.fasta
+#    -gapopen 10
+#    -gapextend 10
+#    -outfile col7_short.water
+# Align_format: srspair
+# Report_file: col7_short.water
+########################################
+
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: AAB66593.1
+# 2: AAB66593.1
+# Matrix: EBLOSUM62
+# Gap_penalty: 10.0
+# Extend_penalty: 10.0
+#
+# Length: 101
+# Identity:      65/101 (64.4%)
+# Similarity:    72/101 (71.3%)
+# Gaps:           9/101 ( 8.9%)
+# Score: 233.0
+# 
+#
+#=======================================
+
+AAB66593.1        17 VSIVITTPPATPALLETLQVVQSGEHSLRLRWEPVPGAPGFRLHWQPEGG     66
+                     |||||||||||||||||||||||.:....:..|||||||||||    | .
+AAB66593.1         5 VSIVITTPPATPALLETLQVVQSMQERTSVEREPVPGAPGFRL----E-S     49
+
+AAB66593.1        67 QEQSLTLGPESNSYNLVGLEPATKYQVWLTVLGQTGEGPPRKVTAYTEPS    116
+                     ... :.|.|:   ||||||||||||||||||||:..:...|||.|||||.
+AAB66593.1        50 NSY-IKLMPQ---YNLVGLEPATKYQVWLTVLGKLPQNNMRKVEAYTEPR     95
+
+AAB66593.1       117 H    117
+                     :
+AAB66593.1        96 Y     96
+
+
+#---------------------------------------
+#---------------------------------------

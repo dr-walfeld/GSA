@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "alignment.h"
+#include "scorematrix.h"
 
 // erzeugt neues Multiedit und gibt es zurueck;
 // als Parameter wird die Operation erwartet
@@ -30,6 +31,8 @@ alignment* alignment_new (char* s1, int len1, char* s2, int len2)
   temp->len1 = len1;
   temp->s2 = s2;
   temp->len2 = len2;
+  temp->firstindex1 = 0;
+  temp->firstindex2 = 0;
 
   // hier kann noch optimiert werden, dies ist der worst case
   // edit-length speichert die Anzahl der Edit-Operations-Eintraege
@@ -118,20 +121,20 @@ void alignment_reverse(alignment* a)
   }
 }
 
-// evaluate the alignment costs
-// takes pointer to alignment and function pointer to cost-function
-int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
+// evaluate the alignment score
+// takes pointer to alignment and scorematrix
+int alignment_evalscore (alignment* a, scorematrix* sm)
 {
-  int costs = 0;
+  int score = 0;
   int i,j;
   
   // use two indices (one for each sequence)
-  int index1 = 0;
-  int index2 = 0;
+  int index1 = a->firstindex1;
+  int index2 = a->firstindex2;
 
   multiedit* me = NULL;
 
-  int gap = costFunc ('-', '-'); // gap costs
+  int gap = get_score (sm, '-', '-'); // gap costs
   // iterate over all entries in multiedit list
   for (i = 0; i < a->editlength; i++)
   {
@@ -148,7 +151,7 @@ int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
         if (a->s1[index1] == '\0' || a->s2[index2] == '\0')
           return -1;
         // determine costs of current base alignment
-        costs += costFunc(a->s1[index1], a->s2[index2]);
+        score += get_score (sm, a->s1[index1], a->s2[index2]);
         index1++;
         index2++;
       }
@@ -157,20 +160,20 @@ int alignment_evalcost (alignment* a, int (*costFunc) (char, char))
       {
         if (a->s2[index2] == '\0')
           return -1;
-        costs += gap;
+        score += gap;
         index2++;
       }
       else
       {
         if (a->s1[index1] == '\0')
           return -1;
-        costs += gap;
+        score += gap;
         index1++;
       }
     }
   }
 
-  return costs;
+  return score;
 }
 
 // print out the alignment
@@ -179,15 +182,15 @@ int alignment_show (alignment* a)
   int i,j;
 
   // use one index for each sequence ...
-  int index1 = 0;
-  int index2 = 0;
+  int index1 = a->firstindex1;
+  int index2 = a->firstindex2;
   // ... and one index for printing
   int printindex = 0;
 
   // reseve space for C-strings to print
-  char * print_s1 = (char*) malloc (a->length+1); // +1 for \0
-  char * print_s2 = (char*) malloc (a->length+1); // +1 for \0
-  char * print_bt = (char*) malloc (a->length+1); // +1 for \0
+  char * print_s1 = (char*) malloc (71); // line width
+  char * print_s2 = (char*) malloc (71);
+  char * print_bt = (char*) malloc (71);
 
   multiedit* me = NULL;
 
@@ -247,6 +250,23 @@ int alignment_show (alignment* a)
       }
 
       printindex++;
+      if (printindex == 70)
+      {
+        // set zero-termination
+        print_s1[printindex] = '\0';
+        print_s2[printindex] = '\0';
+        print_bt[printindex] = '\0';
+
+        // prints alignment
+        printf ("%s\n", print_s1);
+        printf ("%s\n", print_bt);
+        printf ("%s\n", print_s2);
+
+        printf ("\n");
+
+        printindex = 0;
+      }
+
     }
   }
 
@@ -287,16 +307,6 @@ void alignment_delete (alignment* a)
 }
 
 #ifdef UNIT_TEST
-int unit_cost (char, char);
-
-int unit_cost (char a, char b)
-{
-  if (a == '-' || b == '-')
-    return 1;
-  else if (a == b)
-    return 0;
-  return 1;
-}
 
 int main(int argc, char * ARGV[])
 {
@@ -335,8 +345,13 @@ int main(int argc, char * ARGV[])
   printf ("Länge des Alignments (Länge der Multiedit-Liste): %d (%d)\n", \
       al->length, al->editlength);
 
-  int costs = alignment_evalcost (al, unit_cost);
-  printf ("Kosten des Alignments: %d\n", costs);
+  scorematrix* sm = read_scorematrix ("BLOSUM62", 10);
+  if (sm != NULL)
+  {
+    int score = alignment_evalscore (al, sm);
+    printf ("Kosten des Alignments: %d\n", score);
+    delete_scorematrix (sm);
+  }
   alignment_delete (al);
   al = NULL;
 

@@ -1,6 +1,6 @@
 echo "Test mit korrekter Fasta-Datei"
-./fasta_test test.fasta
+./fasta_test ./testdata/test.fasta
 echo "Test mit Fasta-Datei mit doppeltem Header"
-./fasta_test test_fail1.fasta
+./fasta_test ./testdata/test_fail1.fasta
 echo "Test mit Fasta-Datei mit Header ohne Sequenz"
-./fasta_test test_fail2.fasta
+./fasta_test ./testdata/test_fail2.fasta

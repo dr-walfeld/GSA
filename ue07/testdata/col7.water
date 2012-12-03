@@ -1,0 +1,113 @@
+########################################
+# Program: water
+# Rundate: Sun  2 Dec 2012 20:09:06
+# Commandline: water
+#    -asequence col7.fasta
+#    -bsequence toalign.fasta
+#    -gapopen 10
+#    -gapextend 10
+# Align_format: srspair
+# Report_file: aab66593.water
+########################################
+
+#=======================================
+#
+# Aligned_sequences: 2
+# 1: AAB66593.1
+# 2: mutated
+# Matrix: EBLOSUM62
+# Gap_penalty: 10.0
+# Extend_penalty: 10.0
+#
+# Length: 983
+# Identity:     767/983 (78.0%)
+# Similarity:   773/983 (78.6%)
+# Gaps:         146/983 (14.9%)
+# Score: 2677.0
+# 
+#
+#=======================================
+
+AAB66593.1       981 SGASSYILSWRPLRGTGQEVPRAPQTLPGTSSSHRVTGLEPGISYVFSLT   1030
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated            1 SGASSYILSWRPLRGTGQEVPRAPQTLPGTSSSHRVTGLEPGISYVFSLT     50
+
+AAB66593.1      1031 PIQSGVRGSEISVTQTPACSHGPVDVVFLLHATRDNAHNAEAVRRVLERL   1080
+                     |||||||||||||||||||||||||||||||||||||||||| :|.....
+mutated           51 PIQSGVRGSEISVTQTPACSHGPVDVVFLLHATRDNAHNAEA-QRTENAS     99
+
+AAB66593.1      1081 VSALGPLGPQAAQVGLLTYSHRPSPLFPLNSSHD-LGIILR-KIRDIPYV   1128
+                     .|..........:| |........||.|..:... |....| ||||||||
+mutated          100 CSTARQKNIVVRRV-LERLVSALGPLGPQAAQVGLLTYSHRPKIRDIPYV    148
+
+AAB66593.1      1129 DPSGNNLGTAVTTAHRYLLASNAPGRRQQVPGVMVLLVDEPLRGDILSPI   1178
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          149 DPSGNNLGTAVTTAHRYLLASNAPGRRQQVPGVMVLLVDEPLRGDILSPI    198
+
+AAB66593.1      1179 REAQTSGLKVMALSLVGADPEQLRRLAPGTDPIQNFFAVDNGPGLDRAVS   1228
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          199 REAQTSGLKVMALSLVGADPEQLRRLAPGTDPIQNFFAVDNGPGLDRAVS    248
+
+AAB66593.1      1229 DLAVALCQAAVTIEPQTGPCAVHCPKGQKGEPGVTGLQGQAGPPGPPGLP   1278
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          249 DLAVALCQAAVTIEPQTGPCAVHCPKGQKGEPGVTGLQGQAGPPGPPGLP    298
+
+AAB66593.1      1279 GRTGAPGPQGPPGSTQAKGERGFPGPEGPPGSPGLPGVPGSPGIKGSTGR   1328
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          299 GRTGAPGPQGPPGSTQAKGERGFPGPEGPPGSPGLPGVPGSPGIKGSTGR    348
+
+AAB66593.1      1329 PGPRGEQGERGPQGPKGEPGEPGQITGGGGPGFPGKKGDPGPSGPPGSRG   1378
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          349 PGPRGEQGERGPQGPKGEPGEPGQITGGGGPGFPGKKGDPGPSGPPGSRG    398
+
+AAB66593.1      1379 PVGDPGPRGPPGLPGISVKGDKGDRGERGPPGPGIGASEQGDPGLPGLPG   1428
+                     ||||||||||||||||||||||              |          : |
+mutated          399 PVGDPGPRGPPGLPGISVKGDK--------------A----------V-G    423
+
+AAB66593.1      1429 SPGPQGPAGRPGEKGEKGDCEDGGPGLPGQPGPPGEPGLRGAPGMTGPKG   1478
+                      ||  | ||  . |||||  |  . ||      || |  |   | | |  
+mutated          424 -PG--G-AG--A-KGEKG--E--A-GL------PG-P--R---G-T-P--    445
+
+AAB66593.1      1479 DRGLTGTPGEPGVKGERGHPGPVGPQGLPGAAGHPGVEGPEGPPGPTGRR   1528
+                        :        |  .|                             |   
+mutated          446 ---I--------V--NR-----------------------------T---    450
+
+AAB66593.1      1529 GEKGEPGRPGDPAVGPGGAGAKGEKGEAGLPGPRGASGSKGEQGAPGLAL   1578
+                                            :  |.       .  |     |   ||
+mutated          451 -----------------------Q--EC-------C--S-----A---AL    458
+
+AAB66593.1      1579 PGDPGPKGDPGDRGPIGLTGRAGPTGDSGPPGEKGEPGRPGSPGPVGPRG   1628
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          459 PGDPGPKGDPGDRGPIGLTGRAGPTGDSGPPGEKGEPGRPGSPGPVGPRG    508
+
+AAB66593.1      1629 RDGEAGEKGDEGIPGEPGLPGKAGERGLRGAPGPRGPVGEKGDQGDPGED   1678
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          509 RDGEAGEKGDEGIPGEPGLPGKAGERGLRGAPGPRGPVGEKGDQGDPGED    558
+
+AAB66593.1      1679 GRNGSPGSSGPKGDRGEPGPPGPPGRLVDAGIESRDKGEPGQEGPRGPKG   1728
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          559 GRNGSPGSSGPKGDRGEPGPPGPPGRLVDAGIESRDKGEPGQEGPRGPKG    608
+
+AAB66593.1      1729 DPGPPGVSGERGIDGLRGPPGPQGDPGVRGPAGDKGDRGPPGLDGRSGLD   1778
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||
+mutated          609 DPGPPGVSGERGIDGLRGPPGPQGDPGVRGPAGDKGDRGPPGLDGRSGLD    658
+
+AAB66593.1      1779 GKPGAPGPPGLHGASGKAGDPGRDGLPGLRGEHGPPGPPGPPGVPGKAGD   1828
+                     |||||||||||...........||||||||||||||||||||||||||||
+mutated          659 GKPGAPGPPGLRKIYVTEEQADRDGLPGLRGEHGPPGPPGPPGVPGKAGD    708
+
+AAB66593.1      1829 DGKPGLNGKNGDPGDPGEDGRKGEKGDSGAPGREGPDGPKGERGAPGNPG   1878
+                     ||||||||||||||||||||||||||||||||||||||||||...|....
+mutated          709 DGKPGLNGKNGDPGDPGEDGRKGEKGDSGAPGREGPDGPKGEFKLPRTVM    758
+
+AAB66593.1      1879 LQGP-PGLPGQVGPPGQGFPGVPGITGPKGDRGETGSKGEQGLPGERGLA   1927
+                     ..|. .|.||. .|||||||||||||||||||||||||||||||||||||
+mutated          759 NDGHCRGAPGN-PPPGQGFPGVPGITGPKGDRGETGSKGEQGLPGERGLA    807
+
+AAB66593.1      1928 GEPGSLPNAERLLETAGIKVSALREIVDTWDES   1960
+                     |||||||||||||||||||||||||||||||||
+mutated          808 GEPGSLPNAERLLETAGIKVSALREIVDTWDES    840
+
+
+#---------------------------------------
+#---------------------------------------
