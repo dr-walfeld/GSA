@@ -52,15 +52,16 @@ int main(int argc, char* argv[])
   alignentry*** D = initializeDP (len1+1, len2+1);
   alignentry*** I = initializeDP (len1+1, len2+1);
   // calculate costs for optimal alignment of s1 and s2
+
+  // do not save and print costs (for match with output)
   /*int costs = */align (R, D, I, s1, len1, s2, len2, open, extend);
-  
   //printf("Alignment-Kosten: %d\n", costs);
 
   alignment* align = alignment_new(s1,len1,s2,len2);
   traceback(R,D,I,align,len1,len2);
   if (alignment_show(align))
   {
-    puts("FEHLER: inkonsistentes Alignment!");
+    puts("inconsistent alignment!");
   }
   alignment_delete(align);
   deleteDP (R, len1+1, len2+1);

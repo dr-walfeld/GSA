@@ -1,6 +1,6 @@
 CFLAGS+=-Wall -Werror -O2 #-DUNIT_TEST
 
-all: affinealign fasta_test alignment_test optalign_test
+all: substr affinealign fasta_test alignment_test optalign_test
 
 fasta.o: fasta.h
 alignment.o: alignment.h
@@ -20,5 +20,9 @@ optalign_test: optalign_test.o alignment.o
 affinealign: affinealign.o optalignaffine.o alignment.o fasta.o
 	gcc ${LDFLAGS} -o $@ $+
 
+substr: substr.c
+	gcc ${CFLAGS} -o $@ $+
+
+
 clean:
-	-rm -f $(swalignO) affinealign fasta_test alignment_test optalign_test optalign_test.o alignment_test.o
+	-rm -f $(swalignO) substr affinealign fasta_test alignment_test optalign_test optalign_test.o alignment_test.o fasta.o alignment.o optalignaffine.o affinealign.o

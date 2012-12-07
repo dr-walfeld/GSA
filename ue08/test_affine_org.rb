@@ -7,8 +7,7 @@ end
 
 seq = {}
 1.upto(4) do |i|
-  #seq[i] = File.open("seq#{i}.fas").readlines.last.chomp
-  seq[i] = "seq#{i}.fas"
+  seq[i] = File.open("seq#{i}.fas").readlines.last.chomp
 end
 
 solution = File.open("affinealign.out").readlines

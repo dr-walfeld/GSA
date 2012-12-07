@@ -1,15 +1,6 @@
 /*
-   Berechnung des optimalen Alignments zweier Sequenzen mit
-   benutzerdefinierter Kostenfunktion;
-   Berechnung der beiden DP-Tabelle und Traceback;
-   nutzt Alignment-Repraesentation (alignment.h) zur Speicherung
-   eines optimalen Alignments;
-
-   Compilieren mit Direktive DUNIT_TEST fuer Test;
-   als Parameter zwei Sequenzen und Kostenfunktion
-   (0: Unit, 1: Hamming);
-   gibt DP-Matrix, Kosten des optimalen Alignments 
-   und ein optimales Alignment aus;
+   Calculation of an optimal Alignment with unit cost function
+   and user specified affine cap costs
 */
 
 #include <stdlib.h>
@@ -29,7 +20,10 @@ alignentry* alignentry_new (int value, int r, int d, int i)
   return temp;
 }
 
-// helper function for generation of alignment entry
+/* helper function for generation of alignment entry
+   calculate minimum of entries and determine
+   subtable (R,D,I)
+*/
 alignentry* get_entry(int a, int b, int c)
 {
   int cost = MIN(a,b,c);
@@ -52,7 +46,8 @@ alignentry* get_entry(int a, int b, int c)
 }
 
 // fill DP-table (three tables R,D,I)
-int align (alignentry*** R, alignentry*** D, alignentry*** I, char* s1, int len1, char* s2, int len2, int open, int extend)
+int align (alignentry*** R, alignentry*** D, alignentry*** I, char* s1, \
+    int len1, char* s2, int len2, int open, int extend)
 {
   int i = 0;
   int j = 0;
@@ -142,12 +137,16 @@ void deleteDP (alignentry*** table, int m, int n)
 }
 
 // traceback in three tables R,D,I
-int traceback (alignentry*** R,alignentry*** D,alignentry*** I, alignment* a, int i, int j)
+int traceback (alignentry*** R,alignentry*** D,alignentry*** I, alignment* a, \
+    int i, int j)
 {
   // determine minimum value
   int minval = MIN(R[i][j]->value, D[i][j]->value, I[i][j]->value);
   char curr_op = '-';
   alignentry* curr = NULL;
+  // check in which table we should be starting
+  // we have to start in I so the output
+  // matches the test-output
   if (minval == I[i][j]->value)
   {
     curr_op = 'I';

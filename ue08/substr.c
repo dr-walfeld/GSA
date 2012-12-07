@@ -8,25 +8,25 @@
    numbers; idea: keep track of differences between number of
    chars in S and substring; a different array is initialized
    with 0 an initial differences to S are counted (parallel |S|
-   is determindes); while iterating over string only the
+   is determined); while iterating over string only the
    contributions of the new character at the end and the
-   removed character at the end are;
+   removed character at the end arei considered;
    running time O(n+s) where s is number of different characters
    in S
 */
-void substring(char* sequence, int lenseq, int* menge, int lenm)
+void substring(char* sequence, int lenseq, int* set, int lenset)
 {
-  int* substrdist = (int*) malloc(lenm*sizeof(int));
+  int* substrdist = (int*) malloc(lenset*sizeof(int));
   int i;
-  char c;
+  int c;
   int diff = 0;
   int substrlen = 0;
 
-  for(i = 0; i < lenm; i++)
+  for(i = 0; i < lenset; i++)
   {
     substrdist[i] = 0;
-    substrlen += menge[i];
-    if (menge[i] != 0)
+    substrlen += set[i];
+    if (set[i] != 0)
       diff++;
   }
 
@@ -39,24 +39,25 @@ void substring(char* sequence, int lenseq, int* menge, int lenm)
       return;
     }
     c -= 'a';
-    if (menge[c] == substrdist[c])
+    if (set[c] == substrdist[c])
       diff++;
-    else if (menge[c] == substrdist[c]+1)
+    else if (set[c] == substrdist[c]+1)
       diff--;
     substrdist[c]++;
     if (i >= substrlen)
     {
       c = tolower(sequence[i-substrlen])-'a';
-      if (menge[c] == substrdist[c])
+      if (set[c] == substrdist[c])
         diff++;
-      else if (menge[c] == substrdist[c]-1)
+      else if (set[c] == substrdist[c]-1)
         diff--;
       substrdist[c]--;
     }
 
     if (i >= substrlen-1 && diff == 0)
     {
-      printf("matching substring found starting at %d (length %d)\n", i-substrlen+2, substrlen);
+      printf("matching substring found starting at %d (length %d)\n", \
+          i-substrlen+1, substrlen);
     }
   }
 
@@ -69,12 +70,13 @@ int main(int argc, char* argv[])
 {
   if (argc < 3)
   {
-    printf("usage: %s sequence menge(format a=0 c=3 ...)\n", argv[0]);
+    printf("usage: %s sequence set(format a=0 c=3 ...)\n", argv[0]);
     return 0;
   }
 
   char* seq = argv[1];
-  int* menge = (int*) calloc(26, sizeof(int));
+  int lenset = 26;
+  int* set = (int*) calloc(lenset, sizeof(int));
   int lenseq = strlen(seq);
   int i;
 
@@ -91,11 +93,11 @@ int main(int argc, char* argv[])
       printf("expression %s has incorrect format!\n", argv[i]);
       return 1;
     }
-    menge[c-'a'] = num;
+    set[c-'a'] = num;
   }
 
-  substring(seq, lenseq, menge, 26);
+  substring(seq, lenseq, set, lenset);
   
-  free(menge);
+  free(set);
   return 0;
 }
