@@ -29,14 +29,36 @@ alignentry* alignentry_new (int value, int r, int d, int i)
   return temp;
 }
 
-// fill DP-table
+// helper function for generation of alignment entry
+alignentry* get_entry(int a, int b, int c)
+{
+  int cost = MIN(a,b,c);
+
+  int rv = 0;
+  int dv = 0;
+  int iv = 0;
+
+  if (cost == a)
+    rv = 1;
+  if (cost == b)
+    dv = 1;
+  if (cost == c)
+    iv = 1;
+
+  if (cost > INF)
+    cost = INF;
+
+  return alignentry_new(cost, rv, dv, iv); 
+}
+
+// fill DP-table (three tables R,D,I)
 int align (alignentry*** R, alignentry*** D, alignentry*** I, char* s1, int len1, char* s2, int len2, int open, int extend)
 {
   int i = 0;
   int j = 0;
-  int cost = 0;
-  int a,b,c,rv,dv,iv;
+  int a,b,c;
 
+  // initialize R(0,0) with 0 and D(0,0), I(0,0) with gap opening costs
   R[0][0] = alignentry_new(0,0,0,0);
   D[0][0] = alignentry_new(open,0,0,0);
   I[0][0] = alignentry_new(open,0,0,0);
@@ -67,71 +89,25 @@ int align (alignentry*** R, alignentry*** D, alignentry*** I, char* s1, int len1
       a = R[i-1][j-1]->value + ((s1[i-1]) != (s2[j-1]));
       b = D[i-1][j-1]->value + ((s1[i-1]) != (s2[j-1]));
       c = I[i-1][j-1]->value + ((s1[i-1]) != (s2[j-1]));
-      cost = MIN(a,b,c);
 
-      rv = 0;
-      dv = 0;
-      iv = 0;
-
-      if (cost == a)
-        rv = 1;
-      if (cost == b)
-        dv = 1;
-      if (cost == c)
-        iv = 1;
-
-      if (cost > INF)
-        cost = INF;
-      R[i][j] = alignentry_new(cost, rv, dv, iv);
+      R[i][j] = get_entry(a,b,c);
 
       // calculate D
       a = R[i-1][j]->value + open + extend;
       b = D[i-1][j]->value + extend;
       c = I[i-1][j]->value + open + extend;
 
-      cost = MIN(a,b,c);
-
-      rv = 0;
-      dv = 0;
-      iv = 0;
-
-      if (cost == a)
-        rv = 1;
-      if (cost == b)
-        dv = 1;
-      if (cost == c)
-        iv = 1;
-
-      if (cost > INF)
-        cost = INF;
-
-      D[i][j] = alignentry_new(cost, rv, dv, iv);
+      D[i][j] = get_entry(a,b,c);
 
       // calculate I
       a = R[i][j-1]->value + open + extend;
       b = D[i][j-1]->value + open + extend;
       c = I[i][j-1]->value + extend;
 
-      cost = MIN(a,b,c);
-
-      rv = 0;
-      dv = 0;
-      iv = 0;
-
-      if (cost == a)
-        rv = 1;
-      if (cost == b)
-        dv = 1;
-      if (cost == c)
-        iv = 1;
-
-      if (cost > INF)
-        cost = INF;
-      I[i][j] = alignentry_new(cost, rv, dv, iv);
+      I[i][j] = get_entry(a,b,c);
     }
   }
   // return costs for last element in table
-  //printf("%d, %d, %d\n", R[len1][len2]->value, D[len1][len2]->value, I[len1][len2]->value);
   return MIN(R[len1][len2]->value,D[len1][len2]->value,I[len1][len2]->value);
 }
 
@@ -165,25 +141,26 @@ void deleteDP (alignentry*** table, int m, int n)
   free(table);
 }
 
+// traceback in three tables R,D,I
 int traceback (alignentry*** R,alignentry*** D,alignentry*** I, alignment* a, int i, int j)
 {
   int minval = MIN(R[i][j]->value, D[i][j]->value, I[i][j]->value);
   char curr_op = '-';
   alignentry* curr = NULL;
-  if (minval == R[i][j]->value)
+  if (minval == I[i][j]->value)
   {
-    curr_op = 'R';
-    curr = R[i][j];
+    curr_op = 'I';
+    curr = I[i][j];
   }
   else if (minval == D[i][j]->value)
   {
     curr_op = 'D';
     curr = D[i][j];
   }
-  else if (minval == I[i][j]->value)
+  else if (minval == R[i][j]->value)
   {
-    curr_op = 'I';
-    curr = I[i][j];
+    curr_op = 'R';
+    curr = R[i][j];
   }
 
   while (i > 0 || j > 0)

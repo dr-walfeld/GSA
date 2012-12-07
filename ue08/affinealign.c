@@ -1,5 +1,6 @@
 /*
-
+   global alignment of two sequences (read from fasta files) with
+   affine gap cost model
 */
 
 #include <stdlib.h>
@@ -19,6 +20,7 @@ int main(int argc, char* argv[])
     return 1;
   }
   
+  // read two sequences from fasta files
   multifasta* mf1 = read_fasta_file (argv[1]);
   multifasta* mf2 = read_fasta_file (argv[2]);
   if (mf1 == NULL || mf2 == NULL)
@@ -31,20 +33,21 @@ int main(int argc, char* argv[])
   //char* h1 = mf1->entries[0]->header;
   //char* h2 = mf2->entries[0]->header;
 
+  // read gap costs from command line
   int open, extend;
 
   if (sscanf(argv[3],"%d",&open) != 1 || open < 0)
   {
-    printf("invalid input for gap opening costs: %s", argv[3]);
+    printf("invalid input for gap opening costs: %s\n", argv[3]);
     return 1;
   }
   if (sscanf(argv[4],"%d",&extend) != 1 || extend < 0)
   {
-    printf("invalid input for gap extension costs: %s", argv[4]);
+    printf("invalid input for gap extension costs: %s\n", argv[4]);
     return 1;
   }
 
-  // reserve memory for dynamic programing table
+  // reserve memory for dynamic programing table (tree tables R,D,I)
   alignentry*** R = initializeDP (len1+1, len2+1);
   alignentry*** D = initializeDP (len1+1, len2+1);
   alignentry*** I = initializeDP (len1+1, len2+1);

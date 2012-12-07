@@ -35,12 +35,12 @@ int main(int argc, char* argv[])
 
   if (sscanf(argv[3],"%d",&open) != 1 || open < 0)
   {
-    printf("invalid input for gap opening costs: %s", argv[3]);
+    printf("invalid input for gap opening costs: %s\n", argv[3]);
     return 1;
   }
   if (sscanf(argv[4],"%d",&extend) != 1 || extend < 0)
   {
-    printf("invalid input for gap extension costs: %s", argv[4]);
+    printf("invalid input for gap extension costs: %s\n", argv[4]);
     return 1;
   }
 
