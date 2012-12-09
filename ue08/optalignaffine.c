@@ -145,8 +145,6 @@ int traceback (alignentry*** R,alignentry*** D,alignentry*** I, alignment* a, \
   char curr_op = '-';
   alignentry* curr = NULL;
   // check in which table we should be starting
-  // we have to start in I so the output
-  // matches the test-output
   if (minval == I[i][j]->value)
   {
     curr_op = 'I';

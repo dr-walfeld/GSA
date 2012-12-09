@@ -1,0 +1,21 @@
+Affine Gap-Kosten können bessere Alignments liefern, da die erhaltenen
+Alignments biologisch realistischer sind. Dies soll am folgenden Beispiel
+näher erläutert werden:
+
+ohne affine Gap-Kosten
+AGTGACAGTTGCCTA
+||||| | | |||||
+AGTGA-A-T-GCCTA
+
+mit affinen Gap-Kosten
+AGTGACAGTTGCCTA
+|||||    ||||||
+AGTGA---ATGCCTA
+
+Wenn das Alignment zweier verwandter Sequenzen biologisch betrachtet
+werden soll, muss bedacht werden, dass Gaps durch Deletionen und 
+Insertionen von Basen verursacht werden.
+In diesem Kontext ist es wahrscheinlicher, dass bei einem Ereignis
+mehrere Basen (im Beispiel oben 3) auf einmal eingefügt oder gelöscht
+werden, statt dass in mehreren einzelnen Ereignissen kleinere Abschnitte
+(im Beispiel oben dreimal 1) gelöscht/eingefügt werden.

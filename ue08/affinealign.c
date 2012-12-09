@@ -57,6 +57,7 @@ int main(int argc, char* argv[])
   /*int costs = */align (R, D, I, s1, len1, s2, len2, open, extend);
   //printf("Alignment-Kosten: %d\n", costs);
 
+  // determine optimal alignment from dynamic programing tables
   alignment* align = alignment_new(s1,len1,s2,len2);
   traceback(R,D,I,align,len1,len2);
   if (alignment_show(align))
