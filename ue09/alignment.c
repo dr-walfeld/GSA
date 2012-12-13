@@ -271,6 +271,9 @@ int alignment_show (alignment* a)
 
 void alignment_delete (alignment* a)
 {
+  if (a == NULL)
+    return;
+
   int i;
   for (i = 0; i < a->editlength; i++)
   {
@@ -284,6 +287,24 @@ void alignment_delete (alignment* a)
   // free memory of alignment itself
   free (a);
   a = NULL;
+}
+
+// return 1 if alignments match, 0 otherwise
+int alignment_compare (alignment* a, alignment* b)
+{
+  if (a->editlength != b->editlength)
+    return 0;
+
+  int i;
+  for (i = 0; i < a->editlength; i++)
+  {
+    if (a->edits[i]->stretch != b->edits[i]->stretch)
+      return 0;
+    if (a->edits[i]->operation != b->edits[i]->operation)
+      return 0;
+  }
+
+  return 1;
 }
 
 #ifdef UNIT_TEST

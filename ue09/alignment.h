@@ -38,4 +38,5 @@ int alignment_evalcost (alignment*, int(*)(char,char));
 int alignment_show (alignment*);
 void alignment_reverse (alignment*);
 void alignment_delete (alignment*);
+int alignment_compare (alignment*, alignment*);
 #endif
