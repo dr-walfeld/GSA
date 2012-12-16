@@ -1,2 +1,0 @@
-./aligntest seq1.fas seq2.fas seq3.fas seq4.fas > test.out
-grep -e "matching" test.out

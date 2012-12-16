@@ -16,6 +16,5 @@ alignentry*** initializeDP (int, int);
 void deleteDP (alignentry***, int, int);
 alignentry* alignentry_new (int, int, int, int);
 int traceback (alignentry***, alignment*, int, int);
-alignment* optimal_alignment(char*,char*,int(*) (char,char),int*);
 
 #endif

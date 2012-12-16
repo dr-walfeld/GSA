@@ -1,6 +1,6 @@
 #CFLAGS+=-Wall -Werror -O2 #-DUNIT_TEST
 
-all: linspaceoptalign linspace_test fasta_test alignment_test optalign_test
+all: linspaceoptalign linspace_test fasta_test alignment_test 
 
 fasta.o: fasta.h
 alignment.o: alignment.h

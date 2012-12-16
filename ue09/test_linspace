@@ -1,2 +1,1 @@
-./linspace_test agtgcacgt agcac
-../ue05/optalign_test agtgcacgt agcac 0
+./linspace_test tagtgcacgt agcac

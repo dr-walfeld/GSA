@@ -200,7 +200,7 @@ alignment* optimal_alignment(char* s1, char* s2, int (*costFunc) (char, char), i
   // reserve memory for dynamic programing table
   alignentry*** table = initializeDP (len1+1, len2+1);
   // calculate costs for optimal alignment of s1 and s2
-  *cost = align (table, s1, len1, s2, len2, costFunc);
+  *costs = align (table, s1, len1, s2, len2, costFunc);
   alignment* a = alignment_new(s1,len1,s2,len2);
   traceback(table,a,len1,len2);
 

@@ -283,8 +283,8 @@ int main(int argc, char* argv[])
     return 0;
   }
 
-  char* seq1 = argv[1];
-  char* seq2 = argv[2];
+  char* seq1 = argv[1];//"agtgcacgt";
+  char* seq2 = argv[2];//"agcac";
 
   int costs;
   alignment* a = linear_space_alignment(seq1,seq2,unity,&costs);
