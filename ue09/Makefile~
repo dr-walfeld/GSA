@@ -11,7 +11,7 @@ alignmenttest.o: fasta.h alignment.h optalign.h linspace.h
 fasta_test: fasta.c fasta.h
 	cc ${CFLAGS} -DUNIT_TEST -o $@ $+
 linspace_test.o: linspace.c alignment.h
-	cc ${CFLAGS} -c -DUNIT_TEST -o $@ linspace.c
+  cc ${CFLAGS} -c -DUNIT_TEST -o $@ linspace.c
 alignment_test.o: alignment.c alignment.h
 	cc ${CFLAGS} -c -DUNIT_TEST -o $@ alignment.c
 linspace_test: linspace_test.o alignment.o
