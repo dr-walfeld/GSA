@@ -9,22 +9,32 @@ optalign.o: optalign.h
 linspaceoptalign.o: fasta.h alignment.h optalign.h linspace.h
 
 fasta_test: fasta.c fasta.h
+<<<<<<< HEAD
 	gcc ${CFLAGS} -DUNIT_TEST -o $@ $+
 optalign_test.o: optalign.c optalign.h alignment.h
 	gcc ${CFLAGS} -c -DUNIT_TEST -o $@ optalign.c
+=======
+	cc ${CFLAGS} -DUNIT_TEST -o $@ $+
+>>>>>>> 98779dfe535d4abc0386c06f792f0ed9d995f786
 linspace_test.o: linspace.c alignment.h
-	gcc ${CFLAGS} -c -DUNIT_TEST -o $@ linspace.c
+	cc ${CFLAGS} -c -DUNIT_TEST -o $@ linspace.c
 alignment_test.o: alignment.c alignment.h
-	gcc ${CFLAGS} -c -DUNIT_TEST -o $@ alignment.c
+	cc ${CFLAGS} -c -DUNIT_TEST -o $@ alignment.c
 linspace_test: linspace_test.o alignment.o
-	gcc ${LDFLAGS} -o $@ $+
+	cc ${LDFLAGS} -o $@ $+
 
 alignment_test: alignment_test.o
+<<<<<<< HEAD
 	gcc ${LDFLAGS} -o $@ $+
 optalign_test: optalign_test.o alignment.o
 	gcc ${LDFLAGS} -o $@ $+
 linspaceoptalign: linspaceoptalign.o fasta.o alignment.o optalign.o linspace.o
 	gcc ${LDFLAGS} -o $@ $+
+=======
+	cc ${LDFLAGS} -o $@ $+
+aligntest: alignmenttest.o fasta.o alignment.o optalign.o linspace.o
+	cc ${LDFLAGS} -o $@ $+
+>>>>>>> 98779dfe535d4abc0386c06f792f0ed9d995f786
 
 clean:
 	-rm -f linspace_test linspace_test.o optalign_test.o optalign_test optalign.o linspaceoptalign linspaceoptalign.o linspace.o fasta_test alignment_test alignment_test.o fasta.o alignment.o
