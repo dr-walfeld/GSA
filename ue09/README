@@ -1,0 +1,14 @@
+linspace.c/.h
+Implementierung des linear-space-alignment (Aufgabe 9.1-9.3);
+nutzt alignment.h aus Übung 4
+(erweitert um die Funktion alignment_reverse zum umdrehen des Alignments
+und alignment_compare um zwei Alignments zu vergleichen)
+Beispielaufruf in test_linspace
+
+linspaceoptalign.c
+Test des linear Space-Alignments. Es werden Fasta-Dateien eingelesen
+(nutzt fasta.h aus Übung 5) und ein Alignment mit dem linear-space-
+alignment durchgeführt und das Ergebnis mit dem "klassischen" Alignment-
+Verfahren (in quadratischem Platz) verglichen (aus optalign.h aus 
+Übung 5).
+Beispielaufruf in test_linspaceoptalign

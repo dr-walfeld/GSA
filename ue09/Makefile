@@ -11,7 +11,7 @@ linspaceoptalign.o: fasta.h alignment.h optalign.h linspace.h
 fasta_test: fasta.c fasta.h
 	cc ${CFLAGS} -DUNIT_TEST -o $@ $+
 optalign_test.o: optalign.c optalign.h alignment.h
-	gcc ${CFLAGS} -c -DUNIT_TEST -o $@ optalign.c
+	cc ${CFLAGS} -c -DUNIT_TEST -o $@ optalign.c
 linspace_test.o: linspace.c alignment.h
 	cc ${CFLAGS} -c -DUNIT_TEST -o $@ linspace.c
 alignment_test.o: alignment.c alignment.h
@@ -22,9 +22,9 @@ linspace_test: linspace_test.o alignment.o
 alignment_test: alignment_test.o
 	cc ${LDFLAGS} -o $@ $+
 optalign_test: optalign_test.o alignment.o
-	gcc ${LDFLAGS} -o $@ $+
+	cc ${LDFLAGS} -o $@ $+
 linspaceoptalign: linspaceoptalign.o fasta.o alignment.o optalign.o linspace.o
-	gcc ${LDFLAGS} -o $@ $+
+	cc ${LDFLAGS} -o $@ $+
 aligntest: alignmenttest.o fasta.o alignment.o optalign.o linspace.o
 	cc ${LDFLAGS} -o $@ $+
 

@@ -47,7 +47,9 @@ int main(int argc, char* argv[])
       s2 = fastafiles[j]->entries[0]->sequence;
       h2 = fastafiles[j]->entries[0]->header;
 
+      // calculate costs for optimal alignment of s1 and s2
       align1 = optimal_alignment(s1,s2,unity,&costs);
+      // calculate costs for optimal alignment with linear space
       align2 = linear_space_alignment(s1,s2,unity,&costs_lin);
 
       // compare costs
@@ -67,12 +69,10 @@ int main(int argc, char* argv[])
       if (nonmatch)
       {
         printf ("%s\nVS\n%s\n", h1, h2);
-        // calculate costs for optimal alignment of s1 and s2
         printf("alignment: %d (eval: %d)\n",costs, alignment_evalcost(align1,
               unity));
         alignment_show(align1);
 
-        // calculate costs for optimal alignment with linear space
         printf("alignment (linear): %d (eval: %d)\n", costs_lin,
           alignment_evalcost(align2,unity));
         alignment_show(align2);
