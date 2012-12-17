@@ -1,0 +1,15 @@
+CFLAGS+=-Wall -Werror -O2 #-DUNIT_TEST
+
+all: qgram hash_test
+
+hast_test: hash.c
+	cc ${CFLAGS} -DUNIT_TEST -o $@ $+
+
+qgram.o: linkedlist.h
+
+qgram: qgram.o linkedlist.o hash.o
+	cc ${LDFLAGS} -o $@ $+
+
+clean:
+	-rm -f qgram.o qgram linkedlist.o hash.o hash_test
+

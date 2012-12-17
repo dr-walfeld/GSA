@@ -1,0 +1,11 @@
+#ifndef HASH
+#define HASH
+
+typedef struct hashStruct {
+  int** hashtable;
+  int m;
+  int (*h)(int,int,int);
+} hash;
+
+hash* hashtable_new(int);
+#endif
