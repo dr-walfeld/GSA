@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <limits.h>
 
 #include "linkedlist.h"
+#include "hash.h"
 
 #define ABS(a) (((a) >= 0) ? (a) : (-(a)))
 
@@ -21,12 +21,13 @@ int* get_pot_list(int r, int q)
   return result;
 }
 
-inline int translate (int c, int* A)
+// simply read value from hash
+inline int translate (char c, hash* A)
 {
-  return A[c];
+  return hash_search(A, c);
 }
 
-int qgdist(char* u, char* v, int q, int r, int* A)
+int qgdist(char* u, char* v, int q, int r, hash* A)
 {
   // length of sequences
   int m = strlen(u);
@@ -45,7 +46,7 @@ int qgdist(char* u, char* v, int q, int r, int* A)
   // linked list for representation of C
   linkedlist* C = linked_list_new();
 
-  unsigned long int i;
+  int i;
   int c = 0;
 
   for (i = 1; i <= q; i++)
@@ -103,28 +104,26 @@ int qgdist(char* u, char* v, int q, int r, int* A)
 }
 
 // create new alphabet from cstring
-int* new_alphabet(char* s)
+hash* new_alphabet(char* s)
 {
   int len = strlen(s);
-  int* a = (int*) malloc(UCHAR_MAX*sizeof(int));;
-  unsigned int i;
-  for (i = 0; i < UCHAR_MAX; i++)
-  {
-    a[i] = -1;
-  }
+  // create new hashtable (2 times length of alphabet => memory for alphabet no
+  // never a probelm
+  hash* ha = hashtable_new(len);
+  int i;
   for (i = 0; i < len; i++)
   {
-    if (a[(int)s[i]] != -1)
-    {
-      printf("ERROR: %c more than once in alphabet!\n",s[i]);
-      return NULL;
-    }
+    // insert into hash if not present
+    if (hash_search(ha,s[i]) == -1)
+      hash_insert(ha,s[i],i);
+    // otherwise return NULL => incorrect alphabet
     else
     {
-      a[(int)s[i]] = i;
+      printf("ERROR: %c more than once in alphabet!\n", s[i]);
+      return NULL;
     }
   }
-  return a;
+  return ha;
 }
 
 int main(int argc, char* argv[])
@@ -145,11 +144,11 @@ int main(int argc, char* argv[])
     return 1;
   }
   int r = strlen(Astring);
-  int* A = new_alphabet(Astring);
+  hash* A = new_alphabet(Astring);
   if (A == NULL)
     return 1;
   int cost = qgdist(u,v,q,r,A);
   printf("qgdist(u,v) = %d\n", cost);
-  free(A);
+  hashtable_delete(A);
   return 0;
 }

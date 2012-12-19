@@ -110,7 +110,7 @@ int main()
 {
   int c;
   int j,val;
-  hash* ha = hashtable_new(60);
+  hash* ha = hashtable_new(100);
   for (c = '-'; c <= 'z'; c++)
   {
     j = hash_insert(ha, c, c-'a');
