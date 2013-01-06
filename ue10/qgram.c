@@ -5,8 +5,6 @@
 
 #include "linkedlist.h"
 
-#define ABS(a) (((a) >= 0) ? (a) : (-(a)))
-
 // pre-calculate 0..r^q
 int* get_pot_list(int r, int q)
 {
@@ -21,11 +19,19 @@ int* get_pot_list(int r, int q)
   return result;
 }
 
-inline int translate (int c, int* A)
+// translate character with alphabet A
+inline int translate (int c, int* A, int* fail)
 {
+  *fail = 0;
+  if (A[c] == -1)
+  {
+    printf("ERROR: character %c is not defined in alphabet!\n", c);
+    *fail = 1;
+  }
   return A[c];
 }
 
+// calculate qgram distance
 int qgdist(char* u, char* v, int q, int r, int* A)
 {
   // length of sequences
@@ -47,53 +53,66 @@ int qgdist(char* u, char* v, int q, int r, int* A)
 
   unsigned long int i;
   int c = 0;
+  int fail;
 
+  // calculate first q word in u and add to list
   for (i = 1; i <= q; i++)
   {
-    c += translate(u[i-1],A)*rpot[q-i];
+    c += translate(u[i-1],A,&fail)*rpot[q-i];
   }
+  if (fail)
+    return -1;
   tu[c] = 1;
   linked_list_add(C,c);
 
+  // calculate all subsequent q words in u and add to list (if not present)
   for (i = 1; i <= m-q; i++)
   {
-    c = (c - translate(u[i-1],A)*rpot[q-1])*r + translate(u[i+q-1],A);
+    c = (c - translate(u[i-1],A,&fail)*rpot[q-1])*r + translate(u[i+q-1],A,&fail);
+    if (fail)
+      return -1;
     if (tu[c] == 0)
       linked_list_add(C,c);
     tu[c]++;
   }
 
+  // calculate first q word in v and add to list (if not present)
   c = 0;
   for (i = 1; i <= q; i++)
   {
-    c += translate(v[i-1],A)*rpot[q-i];
+    c += translate(v[i-1],A,&fail)*rpot[q-i];
   }
 
+  if (fail)
+    return -1;
   tv[c] = 1;
   if (tu[c] == 0)
     linked_list_add(C,c);
 
+  // calculate all subsequent q words in v and add to list (it not present)
   for (i = 1; i <= n-q; i++)
   {
-    c = (c - translate(v[i-1],A)*rpot[q-1])*r + translate(v[i+q-1],A);
+    c = (c - translate(v[i-1],A,&fail)*rpot[q-1])*r + translate(v[i+q-1],A,&fail);
+    if (fail)
+      return -1;
     if (tv[c] == 0 && tu[c] == 0)
       linked_list_add(C,c);
-    //printf("%d\n", C->end);
     tv[c]++;
   }
+
+  // iterate over list C and calculate distance between u and v
 
   llentry* curr = C->root;
   int result = 0;
 
-
   while (curr != NULL)
   {
-    //printf("%d\n", curr->next);
     c = curr->key;
-    result += ABS(tu[c]-tv[c]);
+    result += abs(tu[c]-tv[c]);
     curr = curr->next;
   }
 
+  // free memory
   linked_list_delete(C);
   free(rpot);
   free(tu);
@@ -106,14 +125,19 @@ int qgdist(char* u, char* v, int q, int r, int* A)
 int* new_alphabet(char* s)
 {
   int len = strlen(s);
+  // reserve memory (for all allowed characters)
   int* a = (int*) malloc(UCHAR_MAX*sizeof(int));;
   unsigned int i;
+  // initialize with -1
   for (i = 0; i < UCHAR_MAX; i++)
   {
     a[i] = -1;
   }
+  // save position of character in alphabet-string as code
   for (i = 0; i < len; i++)
   {
+    // multiple characters in alphabet are not allowed => hamper encoding by
+    // position
     if (a[(int)s[i]] != -1)
     {
       printf("ERROR: %c more than once in alphabet!\n",s[i]);

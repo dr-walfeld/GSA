@@ -3,6 +3,7 @@
 
 #include "linkedlist.h"
 
+// create new linked list
 linkedlist* linked_list_new()
 {
   linkedlist* temp = (linkedlist*) malloc(sizeof(linkedlist));
@@ -12,6 +13,7 @@ linkedlist* linked_list_new()
   return temp;
 }
 
+// add new item (with key)
 void linked_list_add(linkedlist* l, int key)
 {
   llentry* e = llentry_new(key);
@@ -26,6 +28,7 @@ void linked_list_add(linkedlist* l, int key)
   l->end = e;
 }
 
+// create new entry
 llentry* llentry_new(int key)
 {
   llentry* temp = (llentry*) malloc(sizeof(llentry));
@@ -35,6 +38,7 @@ llentry* llentry_new(int key)
   return temp;
 }
 
+// free memory of linked list
 void linked_list_delete(linkedlist* l)
 {
   if (l == NULL)

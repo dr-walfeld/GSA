@@ -1,0 +1,70 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{ucs}
+\usepackage[utf8x]{inputenc}
+\usepackage[german]{babel}
+\usepackage{fontenc}
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{amsmath}
+%\usepackage{a4wide}
+\usepackage[a4paper, left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
+\usepackage{verbatim}
+\usepackage{alltt}
+\renewcommand{\ttdefault}{txtt}
+
+\begin{document}
+
+\section*{Aufgabe 1}
+\paragraph{(1)}
+$u=acgacgtag, v=ggacgtgcag$\newline
+$q=2$:\newline
+$u: ac\to 2, cg\to 2, ga\to 1, gt\to 1, ta\to 1, ag\to 1$\newline
+$v: gg\to 1, ac\to 1, ga\to 1, cg\to 1, gt\to 1, tg\to 1, gc\to 1, ca\to 1,
+ag\to 1$\newline
+$qwdist_2(u,v)=7$\newline\newline
+$q=3$:\newline
+$u: acg\to 2, cga\to 1, gac\to 1, cgt\to 1, gta\to 1, tag\to 1$\newline
+$v: gga\to 1, gac\to 1, acg\to 1, cgt\to 1, gtg\to 1, tgc\to 1, gca\to 1, cag\to
+1$\newline
+$qwdist_3(u,v)=9$\newline
+\paragraph{(2)}
+$edist_\delta(u,v)=4$\newline
+optimales Alignment:
+\begin{alltt}
+acgacgt--ag
+  |||||  ||
+-ggacgtgcag
+\end{alltt}
+\paragraph{(3)}
+$u=ryrryryrr, v=rrryryryrr$\newline
+$q=2$:\newline
+$u: ry\to 3, yr\to 3, rr\to 2$\newline
+$v: rr\to 3, ry\to 3, yr\to 3$\newline
+$qwdist_2(u,v)=1$\newline\newline
+$q=3$:\newline
+$u: ryr\to 3, yrr\to 2, rry\to 1, yry\to 1$\newline
+$v: rrr\to 1, rry\to 1, ryr\to 3, yry\to 2, yrr\to 1$\newline
+$qwdist_3(u,v)=3$\newline\newline
+$edist_\delta(u,v)=2$\newline
+\paragraph{(4)}
+$u=abab, v=abba$\newline
+$u: ab\to 2, ba\to 1$\newline
+$v: ab\to 1, ba\to 1, bb\to 1$\newline
+$2=edist_\delta(u,v)=qwdist_2(u,v)=2$\newline\newline
+$u=abaca, v=ababa$\newline
+$u: ab\to 1, ba\to 1, ac\to 1, ca\to 1$\newline
+$v: ab\to 2, ba\to 2$\newline
+$1=edist_\delta(u,v)<qwdist_2(u,v)=4$\newline\newline
+$u=abbb, v=bbabb$\newline
+$u: ab\to 1, bb\to 2$\newline
+$v: bb\to 2, ba\to 1, ab\to 1$\newline
+$2=edist_\delta(u,v)>qwdist_2(u,v)=1$\newline
+\section*{Aufgabe 3}
+$u=agtgcacacatc, v=atcacacttagc$\newline
+Zerlegung von u in Bezug auf v\newline
+$\Psi_{lr}=(ag,t,gc,a,caca,t,c)$\newline
+$\Psi_{rl}=(a,g,t,g,caca,c,atc)$\newline
+Zerlegung von v in Bezug auf u\newline
+$\Psi_{lr}=(atc,a,cac,t,t,a,gc)$\newline
+$\Psi_{rl}=(a,t,cacac,t,t,a,gc)$\newline
+\end{document}
