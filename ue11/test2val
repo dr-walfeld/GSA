@@ -1,0 +1,6 @@
+valgrind ./scorefasta agtgcacacatc atcacacttagc agtc 1
+valgrind ./scorefasta agtgcacacatc atcacacttagc agtc 2
+valgrind ./scorefasta agtgcacacatc atcacacttagc agtc 3
+
+valgrind ./scorefasta agcgatag agtgacag agtc 2
+valgrind ./scorefasta agcgatag agtgacag agtc 3

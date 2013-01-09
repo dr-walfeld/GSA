@@ -1,0 +1,12 @@
+CFLAGS+=-Wall -Werror -g -O2
+
+all: scorefasta
+
+scorefasta.o: encode.h
+
+scorefasta: scorefasta.o encode.o
+	cc ${LDFLAGS} -o $@ $+
+
+clean:
+	-rm -f scorefasta.o scorefasta encode.o
+
