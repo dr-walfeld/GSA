@@ -65,6 +65,7 @@ int* translate_sequence(char* w, int n, int q, int r, int* A)
     output[i] = c;
   }
 
+  free(rpot);
   return output;
 }
 

@@ -22,7 +22,6 @@ int* get_pot_list(int r, int q)
 // translate character with alphabet A
 inline int translate (int c, int* A, int* fail)
 {
-  *fail = 0;
   if (A[c] == -1)
   {
     printf("ERROR: character %c is not defined in alphabet!\n", c);
@@ -31,11 +30,15 @@ inline int translate (int c, int* A, int* fail)
   return A[c];
 }
 
-// calculate qgram distance
+/* translate sequence (cstring) of length n into integercode-array 
+  (with alphabet A of length r and wordsize q) of length n-q+1 */
 int* translate_sequence(char* w, int n, int q, int r, int* A)
 {
   if (q > n)
+  {
+    printf("ERROR: q may not be larger than sequence length\n");
     return NULL;
+  }
 
   // precalculated exponentiation r^q
   int* rpot = get_pot_list(r,q);

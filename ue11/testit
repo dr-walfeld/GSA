@@ -1,0 +1,1 @@
+./createmsp testquery.fasta testdb.fasta hits 8 1 -2 10
