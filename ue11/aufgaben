@@ -1,0 +1,67 @@
+Aufgabe 11.1
+Berechnung des Fasta-Score. Verwendet die Codierungsfunktionen aus Übung 10
+(encode.c/h).
+Test-Aufruf in test_fastascore1 und test_fastascore2
+
+Aufgabe 11.2
+a)
+Substrings s der Länge q=4 in w
+ggcc
+gccg
+ccgc
+
+baue Tries mit scores für substrings; Abbruch, wenn k=3 nicht mehr erreicht
+werden kann
+(links: c, rechts: g)
+ggcc
+              0
+       /          \
+      0             1
+     / \         /    \
+    0   1       1      2
+       / \     / \    / \
+      2   1   2   1  3   2
+     /\      /\     /\  / \
+    3  2    3  2   4  3 3  2
+
+gccg
+
+             0
+       /         \
+      0           1
+     / \       /    \
+    1   0     2      1
+   / \      /  \    / \
+  2   1    3    2  2   1
+ /\       /\   /\  /\
+2  3     3 4  2 3 2 3
+
+ccgc
+
+             0
+       /           \
+      1             0
+    /   \           /\
+   2    1          1  0
+ /  \   /\         /\
+ 2  3  1 2       1 2
+/\  /\   /\        /\
+3 2 4 3  3 2       3 2
+
+Liste nun alle Sequenzen auf, deren Score >= k:
+Enw3(w)={cccc,ccgc,ccgg,cggc,gcgc,cccg,gccc,gccg,gcgg,ggcg,cgcc,ggcc,gggc}
+
+b)
+Umgebung für k=0: alle Sequenzen aus A^q (da der Score aller Sequenzen >= 0)
+Umgebung für k>q: keine Sequenzen aus A^q (da der Score bei der oben gegebenen
+                  Scorefunktion niemals > q werden kann)
+Umgebung für k=1: alle Sequenzen aus A^q mit mindestens einem Match in einem 
+                  der q-Worte in w
+Umgebung für k=q: alle Sequenzen aus A^q, die mit einem der q-Worte aus w exakt
+                  übereinstimmen; die Umgebung besteht folglich aus 
+                  allen q-Worten in w
+
+Aufgabe 11.3
+Erweiterung gegebener Blast-Hits. Verwendet die in Übung 5 implementierten Methoden
+zum Einlesen von FASTA-Dateien.
+Test-Aufruf in test_msp(2a/b)

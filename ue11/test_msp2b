@@ -1,0 +1,1 @@
+./createmsp testquery2b.fasta testdb2.fasta hits2 6 1 -1 5

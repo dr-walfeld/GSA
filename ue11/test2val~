@@ -1,6 +1,0 @@
-./scorefasta agtgcacacatc atcacacttagc agtc 1
-./scorefasta agtgcacacatc atcacacttagc agtc 2
-./scorefasta agtgcacacatc atcacacttagc agtc 3
-
-./scorefasta agcgatag agtgacag agtc 2
-./scorefasta agcgatag agtgacag agtc 3
