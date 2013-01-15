@@ -1,0 +1,13 @@
+CFLAGS+=-Wall -Werror -g -O2
+
+all: envir
+
+envir.o: scorematrix.h linkedlist.h stack.h
+
+envir: envir.o scorematrix.o linkedlist.o stack.o
+	cc ${LDFLAGS} -o $@ $+
+
+
+clean:
+	-rm -f linkedlist.o envir envir.o scorematrix.o stack.o
+
