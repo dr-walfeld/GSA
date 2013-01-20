@@ -10,19 +10,14 @@
 /* function NEW in 12.2 */
 int* calclookahead(char* seq, char* alphabet, int r, int q, int k, scorematrix* sm)
 {
-  int* look = malloc(sizeof(int)*(q+1));
-  int d,i,max,score;
-  look[q] = k;
-  for (d = q-1; d >= 0; d--)
+  int* look = malloc(sizeof(int)*(q));
+  int d;
+
+  /* calculate threshold level for each position in q-word */
+  look[q-1] = k;
+  for (d = q-2; d >= 0; d--)
   {
-    max = -100000;
-    for (i = 0; i < r; i++)
-    {
-      score = get_score(sm,seq[d],alphabet[i]);
-      if (score > max)
-        max = score;
-    }
-    look[d] = look[d+1] - max;
+    look[d] = look[d+1] - get_maxscore(sm,seq[d+1]);
   }
 
   return look;
@@ -35,7 +30,9 @@ Stack* calcenv(char* seq, char* alphabet, int r, int q, int k, scorematrix* sm, 
   TrieElement *curr,*parent;
   int i;
   int score;
-  int* look = calclookahead(seq, alphabet, r, q, k, sm); /* NEW in 12.2 */
+  int* look;
+
+  look = calclookahead(seq, alphabet, r, q, k, sm); /* NEW in 12.2 */
   
   stack_push(s,start);
   (*pushes)++;
@@ -49,9 +46,9 @@ Stack* calcenv(char* seq, char* alphabet, int r, int q, int k, scorematrix* sm, 
       {
         score = get_score(sm, alphabet[i], seq[parent->dephth]);
         /* if-condition NEW in 12.2 */
-        if (pruning == 0 && parent->key + score >= look[parent->dephth+1])
+        if (pruning == 0 || parent->key + score >= look[parent->dephth])
         {
-          curr = add_new_trieelement(parent,curr,parent->key + score, i, parent->dephth+1);
+          curr = add_new_trieelement(parent,curr,parent->key + score, i);
           stack_push(s,(void*)curr);
           (*pushes)++;
         }

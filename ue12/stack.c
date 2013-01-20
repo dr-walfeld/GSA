@@ -1,3 +1,5 @@
+/* stack from PBI excercise */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
@@ -5,7 +7,8 @@
 
 #include "stack.h"
 
-Stackelement* stackelement_new()
+/* create new stack element */
+static Stackelement* stackelement_new()
 {
   Stackelement *se;
   se = malloc(sizeof(Stackelement));
@@ -15,7 +18,8 @@ Stackelement* stackelement_new()
   return se;
 }
 
-void stackelement_delete(Stackelement* se)
+/* delete stack element */
+static void stackelement_delete(Stackelement* se)
 {
   /* free memory and set pointer to NULL*/
   if (se != NULL)
@@ -25,6 +29,7 @@ void stackelement_delete(Stackelement* se)
   }
 }
 
+/* create new stack */
 Stack* stack_new()
 {
   Stack *s;
@@ -35,6 +40,7 @@ Stack* stack_new()
   return s;
 }
 
+/* delete stack */
 void stack_delete(Stack *s)
 {
   /* delete all elements starting from top */
@@ -53,6 +59,7 @@ void stack_delete(Stack *s)
   }
 }
 
+/* push element to stack */
 void stack_push(Stack *s, void* data)
 {
   assert(s);
@@ -63,6 +70,7 @@ void stack_push(Stack *s, void* data)
   s->top = se;
 }
 
+/* pop element from stack */
 void* stack_pop(Stack *s)
 {
   void* retval;
@@ -78,6 +86,7 @@ void* stack_pop(Stack *s)
   return retval;
 }
 
+/* check if stack is empty */
 int stack_is_empty(Stack *s)
 {
   assert(s);

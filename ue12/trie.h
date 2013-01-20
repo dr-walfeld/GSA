@@ -15,9 +15,7 @@ typedef struct {
 } Trie;
 
 Trie* trie_new();
-TrieElement* trie_element_new();
-TrieElement* add_new_trieelement(TrieElement*, TrieElement*, int, int, int);
+TrieElement* add_new_trieelement(TrieElement*, TrieElement*, int, int);
 void trie_delete(Trie*);
-void trie_element_delete(TrieElement* te);
 
 #endif

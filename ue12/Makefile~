@@ -1,13 +1,17 @@
 CFLAGS+=-Wall -Werror -g -O2
 
-all: envir
+all: envir pssm_test pssmlook
 
-envir.o: scorematrix.h linkedlist.h stack.h
+envir.o: scorematrix.h linkedlist.h stack.h trie.h
 
-envir: envir.o scorematrix.o linkedlist.o stack.o
+envir: envir.o scorematrix.o linkedlist.o stack.o trie.o
 	cc ${LDFLAGS} -o $@ $+
 
+pssm_test: pssm.c pssm.h
+	cc ${CFLAGS} -DUNIT_TEST -o $@ $+
+
+pssmlook: pssm.o
 
 clean:
-	-rm -f linkedlist.o envir envir.o scorematrix.o stack.o
+	-rm -f linkedlist.o envir envir.o scorematrix.o stack.o trie.o pssm_test pssm.o pssmlook
 

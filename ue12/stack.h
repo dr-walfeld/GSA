@@ -11,8 +11,6 @@ typedef struct {
   unsigned size;
 } Stack;
 
-Stackelement* stackelement_new();
-void stackelement_delete(Stackelement*);
 Stack* stack_new();
 void stack_delete(Stack*);
 void stack_push(Stack*, void*);

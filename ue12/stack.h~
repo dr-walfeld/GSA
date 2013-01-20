@@ -1,4 +1,4 @@
-#ifdef STACK
+#ifndef STACK
 #define STACK
 
 typedef struct Stackelement {

@@ -2,6 +2,7 @@
 
 #include "trie.h"
 
+/* create new Trie */
 Trie* trie_new()
 {
   Trie* temp = malloc (sizeof(Trie));
@@ -9,13 +10,15 @@ Trie* trie_new()
   return temp;
 }
 
+/* delete Trie */
 void trie_delete(Trie* t)
 {
   trie_element_delete(t->root);
   free(t);
 }
 
-void trie_element_delete(TrieElement* te)
+/* delete recursively element from Trie */
+static void trie_element_delete(TrieElement* te)
 {
   if (te != NULL)
   {
@@ -25,7 +28,8 @@ void trie_element_delete(TrieElement* te)
   }
 }
 
-TrieElement* trie_element_new()
+/* create new Trie element */
+static TrieElement* trie_element_new()
 {
   TrieElement* temp = malloc(sizeof(TrieElement));
   temp->leftchild = NULL;
@@ -34,7 +38,11 @@ TrieElement* trie_element_new()
   return temp;
 }
 
-TrieElement* add_new_trieelement(TrieElement* parent, TrieElement* sibbling, int key, int edge, int dephth)
+/* add new Trie element to element parent and to
+   element sibbling as right child (if not NULL);
+   key specifies key, edge the edge label of incoming edge
+*/
+TrieElement* add_new_trieelement(TrieElement* parent, TrieElement* sibbling, int key, int edge)
 {
   TrieElement* temp = trie_element_new();
   temp->key = key;
@@ -49,6 +57,7 @@ TrieElement* add_new_trieelement(TrieElement* parent, TrieElement* sibbling, int
   {
     temp->rightsibbling = parent->leftchild;
     parent->leftchild = temp;
+    temp->dephth = parent->dephth+1;
   }
 
   return temp;

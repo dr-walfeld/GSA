@@ -5,16 +5,6 @@
 
 #include "stack.h"
 
-typedef struct Stackelement {
-  struct Stackelement *next;
-  void* data;
-} Stackelement;
-
-typedef struct {
-  Stackelement *top;
-  unsigned size;
-} Stack;
-
 Stackelement* stackelement_new()
 {
   Stackelement *se;
