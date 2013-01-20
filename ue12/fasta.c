@@ -9,26 +9,28 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <assert.h>
 
 #include "fasta.h"
 
 #define MAX_LINE 1024
 
 /* generate new fasta-entry */
-fasta* fasta_new (int csize)
+static fasta* fasta_new (int csize)
 {
   fasta* temp = (fasta *) malloc (sizeof(fasta));
-  temp->length = 0;
-  temp->clength = 0;
+  assert(temp != NULL);
+  temp->length = 0; /* length of sequence */
+  temp->clength = 0; /* length of header */
   temp->header = (char *) malloc (csize*sizeof(char));
   temp->sequence = (char *) malloc (csize*sizeof(char));
-  temp->csize = csize;
-  temp->ssize = csize;
+  temp->csize = csize; /* reserved memory for header */
+  temp->ssize = csize; /* reserved memory for sequence*/
   return temp;
 }
 
 /* free memory of fasta entry */
-void fasta_delete (fasta* f)
+static void fasta_delete (fasta* f)
 {
   free (f->header);
   free (f->sequence);
@@ -36,47 +38,51 @@ void fasta_delete (fasta* f)
 }
 
 /* add base to sequence in fasta entry */
-void fasta_add_base (fasta* f, char base)
+static void fasta_add_base (fasta* f, char base)
 {
-  // reserve more memory (if reserved memory is not sufficient)
+  /* reserve more memory (if reserved memory is not sufficient) */
   if (f->length == f->ssize)
   {
     f->ssize *= 2;
     f->sequence = (char *) realloc (f->sequence, sizeof(char)*f->ssize);
+    assert(f->sequence != NULL);
   }
   f->sequence[f->length] = base;
-  // 0-terminator does not elong string
+  /* 0-terminator does not elong string */
   if (base != '\0')
     f->length++;
 }
 
-// add character to header-string
-void fasta_add_header_char (fasta* f, char ch)
+/* add character to header-string */
+static void fasta_add_header_char (fasta* f, char ch)
 {
   if (f->clength == f->csize)
   {
     f->csize *= 2;
     f->header = (char *) realloc (f->header, sizeof(char)*f->csize);
+    assert(f->header != NULL);
   }
   f->header[f->clength] = ch;
-  // the 0-terminator does not contribute to the string length
-  // and may (and should) be overwritten everytime
+  /* the 0-terminator does not contribute to the string length
+     and may (and should) be overwritten everytime */
   if (ch != '\0')
     f->clength++;
 }
 
-// generate new collection of fasta-entries with initial size
-multifasta* multifasta_new(int size)
+/* generate new collection of fasta-entries with initial size */
+static multifasta* multifasta_new(int size)
 {
   multifasta* temp = (multifasta *) malloc (sizeof(multifasta));
+  assert(temp != NULL);
   temp->length = 0;
   temp->maxlen = size;
   temp->entries = (fasta **) malloc(size*sizeof(fasta*));
+  assert(temp->entries != NULL);
 
   return temp;
 }
 
-// free memory of multifasta
+/* free memory of multifasta */
 void multifasta_delete (multifasta* mf)
 {
   if (mf == NULL)
@@ -90,99 +96,100 @@ void multifasta_delete (multifasta* mf)
   free (mf);
 }
 
-// add new fasta entry
-void multifasta_add_fasta (multifasta * mf, fasta * f)
+/* add new fasta entry */
+static void multifasta_add_fasta (multifasta * mf, fasta * f)
 {
   if (mf->length == mf->maxlen)
   {
     mf->maxlen *= 2;
     mf->entries = (fasta **) realloc (mf->entries, sizeof(fasta*)*mf->maxlen);
+    assert(mf->entries != NULL);
   }
   mf->entries[mf->length] = f;
   mf->length++;
 }
-
-// generate multifasta from fasta file
+ 
+/* generate multifasta from fasta file */
 multifasta* read_fasta_file (char* filename)
 {
   char ch;
-
-  // open file
-  FILE *filestream = fopen(filename, "rt");
+  int newline = 1,header = 0,sequence = 0,comment = 0;
+  FILE *filestream;
+  multifasta* mfast;
+  fasta* seq;
   
-  // if file could not be opened ...
+  /* open file */
+  filestream = fopen(filename, "rt");
+
+  /* if file could not be opened ... */
   if (filestream == NULL)
   {
-    printf("ERROR: Can not open File %s!\n", filename);
+    fprintf(stderr,"ERROR: Can not open File %s!\n", filename);
     return NULL;
   }
 
-  // initialize multifasta with 20 entries
-  multifasta* mfast = multifasta_new(20);
+  /* initialize multifasta with 20 entries */
+  mfast = multifasta_new(20);
 
-  fasta* seq = NULL;
+  seq = NULL;
   
-  int newline = 1;
-  int header = 0;
-  int sequence = 0;
-  int comment = 0;
   do
   {
-    // read current char
+    /* read current char */
     ch = fgetc (filestream);
-    // check if line just started
+    /* check if line just started */
     if (newline)
     {
-      // check if its just another newline
+      /* check if its just another newline */
       newline = (ch == '\n');
-      // check if it is a > (header starts)
+      /* check if it is a > (header starts) */
       if (ch == '>')
       {
-        // if header => must not happen
+        /* if header => must not happen */
         if (header)
         {
-          puts ("ERROR: File is not FASTA (no header after header allowed)!");
-          // free multifasta, close filestream and return NULL
+          fprintf (stderr,"ERROR: File is not FASTA (no header after header allowed)!");
+          /* free multifasta, close filestream and return NULL */
           fclose(filestream);
           multifasta_delete (mfast);
           return NULL;
         }
-        // now the header follows
+        /* now the header follows */
         header = 1;
-        // is sequence preceeded => finish sequence and add to multifasta
+        /* is sequence preceeded => finish sequence and add to multifasta */
         if (sequence)
         {
           multifasta_add_fasta (mfast, seq);
           fasta_add_base(seq, '\0');
           sequence = 0;
         }
-        // create new fasta struct
+        /* create new fasta struct */
         seq = fasta_new (MAX_LINE);
        
       }
-      // if comment line is starting
+      /* if comment line is starting */
       else if (ch == '#')
       {
         comment = 1;
       }
-      // if a base is the first character
+      /* if a base is the first character */
       else if (isalpha(ch))
       {
-        // if already a sequence is beeing read => just add base
+        /* if already a sequence is beeing read => just add base */
         if (sequence)
         {
           fasta_add_base(seq, ch);
         }
-        // else start sequence
+        /* else start sequence */
         else
         {
           fasta_add_base(seq, ch);
           sequence = 1;
-          // if no header preceeded => then it's not FASTA
+          /* if no header preceeded => then it's not FASTA */
           if (!header)
           {
-            puts("ERROR: File is not FASTA (hader missing)!");
-            // free multifasta, close filestream and return NULL
+            fprintf(stderr,"ERROR: File is not FASTA (hader missing)!");
+            /* free multifasta, close filestream and return NULL */
             fclose(filestream);
             multifasta_delete (mfast);
             return NULL;
@@ -190,24 +197,24 @@ multifasta* read_fasta_file (char* filename)
           header = 0;
         }
       }
-      // if no base character within sequence;
-      // empty lines are ok and file may also end
+      /* if no base character within sequence; 
+         empty lines are ok and file may also end */
       else if (!newline && ch != EOF)
       {
-        // free multifasta, close filestream and return NULL
+        /* free multifasta, close filestream and return NULL */
         fclose(filestream);
-        printf("ERROR: non-fasta conform line detected! %c is not an allowed symbol!\n", ch);
+        fprintf(stderr,"ERROR: non-fasta conform line detected! %c is not an allowed symbol!\n", ch);
         multifasta_delete (mfast);
         return NULL;
       }
     }
-    // if we didn't start a newline
+    /* if we didn't start a newline */
     else
     {
-      // check if its a newline character
+      /* check if its a newline character */
       newline = (ch == '\n');
-      // check if comment and if its a newline => now comment ends
-      // all other chars are ignored (because its a comment)
+      /* check if comment and if its a newline => now comment ends
+         all other chars are ignored (because its a comment) */
       if (comment)
       {
         if (newline)
@@ -215,43 +222,43 @@ multifasta* read_fasta_file (char* filename)
           comment = 0;
         }
       }
-      // if reading a header
+      /* if reading a header */
       else if (header)
       {
-        // if there is no newline => add it to sequence header
+        /* if there is no newline => add it to sequence header */
         if (!newline)
           fasta_add_header_char(seq, ch);
         else
           fasta_add_header_char(seq, '\0');
-        // do NOT set header = 0 (need for checking correct FASTA)
+        /* do NOT set header = 0 (need for checking correct FASTA) */
       }
-      // thats ok because after a sequence started, there is never (header)
+      /* thats ok because after a sequence started, there is never (header) */
       else if (sequence)
       {
         if (isalpha(ch))
           fasta_add_base(seq, ch);
         else if (!newline && ch != EOF)
         {
-          // free multifasta, close filestream and return NULL
+          /* free multifasta, close filestream and return NULL */
           fclose(filestream);
-          printf("ERROR: non-fasta conform line detected! %c is not an allowed symbol!\n",ch);
+          fprintf(stderr,"ERROR: non-fasta conform line detected! %c is not an allowed symbol!\n",ch);
           multifasta_delete (mfast);
           return NULL;
         }
       }
     }
-  } while (ch != EOF); // stop if EOF is reached
+  } while (ch != EOF); /* stop if EOF is reached */
 
-  // file may not end with header or without seuqence
+  /* file may not end with header or without seuqence */
   if (header || !sequence)
   {
-    puts ("ERROR: File is not FASTA (sequence missing)!");
+    fprintf (stderr,"ERROR: File is not FASTA (sequence missing)!");
     fclose(filestream);
     multifasta_delete (mfast);
     return NULL;
   }
 
-  // finish last added sequence
+  /* finish last added sequence */
   multifasta_add_fasta (mfast, seq);
   fasta_add_base(seq, '\0');
 
@@ -262,21 +269,22 @@ multifasta* read_fasta_file (char* filename)
 
 #ifdef UNIT_TEST
 
-// unit test: read fasta file and print all entries
+/* unit test: read fasta file and print all entries */
 int main(int argc, char * argv[])
 {
+  int i;
+  multifasta *mf;
 
   if (argc < 2)
   {
-    puts ("ERROR: no FASTA-file specified!");
+    fprintf (stderr,"ERROR: no FASTA-file specified!");
     return 1;
   }
-  multifasta *mf = read_fasta_file (argv[1]);
+  mf = read_fasta_file (argv[1]);
 
   if (mf == NULL)
     return 1;
   
-  int i;
   for (i = 0; i < mf->length; i++)
   {
     printf("Entry %d \n", i);

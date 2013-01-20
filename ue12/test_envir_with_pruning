@@ -1,0 +1,1 @@
+./envir ./testdata/BLOSUM62 ACDEFGHIKLMNPQRSTVWXY ./testdata/testdb.fasta 4 22 1

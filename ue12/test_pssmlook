@@ -1,1 +1,4 @@
-pssmlook pssm_aus_skript.pssm CFFCMQAIIC 150
+./pssmlook ./testdata/pssm_aus_skript.pssm ./testdata/somesequence.fasta 150
+./pssmlook ./testdata/pssm_aus_skript.pssm ./testdata/xp_002433432.fasta 200 
+./pssmlook ./testdata/pssm_aus_skript.pssm ./testdata/xp_003643406.fasta 200
+./pssmlook ./testdata/pssm_aus_skript.pssm ./testdata/xp_003741165.fasta 200

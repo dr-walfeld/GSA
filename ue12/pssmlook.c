@@ -10,22 +10,22 @@
 int* calc_intermediate(Pssm* pssm, int th)
 {
   int d;
-  int lenpssm = pssm->n;
+  int lenpssm = pssm->positions;
   int* thd = malloc(lenpssm*sizeof(int));
 
   /* last intermediate threshold is threshold score itself */
   d = lenpssm-1;
   thd[d] = th;
-  printf("%d, ", thd[d]);
+  /* printf("%d, ", thd[d]); */
 
   /* calculate next threshold-score with
      maximum at position d+1 */
   for (d = lenpssm-2; d >= 0; d--)
   {
     thd[d] = thd[d+1] - get_pssmmaxscore(pssm,d+1);
-    printf("%d, ", thd[d]);
+    /* printf("%d, ", thd[d]); */
   }
-  printf("\n");
+  /* printf("\n"); */
 
   return thd;
 }
@@ -34,7 +34,7 @@ int* calc_intermediate(Pssm* pssm, int th)
 void show_positions_look(Pssm* pssm, char* seq, int lenseq, int th, int* counter)
 {
   int j,d, score;
-  int lenpssm = pssm->n;
+  int lenpssm = pssm->positions;
 
   int* thd;
 
@@ -70,7 +70,7 @@ void show_positions_look(Pssm* pssm, char* seq, int lenseq, int th, int* counter
 void show_positions_naive(Pssm* pssm, char* seq, int lenseq, int th, int* counter)
 {
   int j,d, score;
-  int lenpssm = pssm->n;
+  int lenpssm = pssm->positions;
 
   *counter = 0;
 
@@ -115,7 +115,7 @@ int main(int argc, char* argv[])
     return 1;
   }
 
-  printf("%s\n", mf->entries[0]->header);
+  printf(">%s\n", mf->entries[0]->header);
   seq = mf->entries[0]->sequence;
   lenseq = mf->entries[0]->length;
 
@@ -126,8 +126,10 @@ int main(int argc, char* argv[])
   }
 
   /* calculate positions matching pssm */
+  printf("naive: \n");
   show_positions_naive(pssm, seq, lenseq, th, &counter);
   printf("%d scorings\n", counter);
+  printf("lookahead: \n");
   show_positions_look(pssm, seq, lenseq, th, &counter);
   printf("%d scorings\n", counter);
 

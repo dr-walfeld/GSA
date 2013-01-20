@@ -1,7 +1,5 @@
-/* representation of a score matrix (i.e. BLOSUM) for sequence alignment;
-   score matrix can be read from file and can be accessed with
-   score (char a, char b) to get the scoring value of a and b;
-   the score function and storage of matrix is case insensitive
+/*
+   representation of position specific scoring matrix
 */
 
 #include <stdlib.h>
@@ -9,13 +7,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+#include <assert.h>
 
 #include "pssm.h"
 
 #define LINE 1024
 
-/* reserve memory for PSSM (with m alphabet characters and length n) */
-static Pssm* initialize_pssm (int m, int n)
+/* reserve memory for PSSM (with characters alphabet characters and length
+   positions) */
+static Pssm* initialize_pssm (int characters, int positions)
 {
   int i,j;
   Pssm* pssm;
@@ -24,23 +24,27 @@ static Pssm* initialize_pssm (int m, int n)
   int* maxscore;
 
   pssm = malloc(sizeof(Pssm));
-  matrix = (int**) malloc(m*sizeof(int*));
+  assert(pssm != NULL);
+  matrix = (int**) malloc(characters*sizeof(int*));
+  assert(matrix != NULL);
 
   // reserve memory as one block
-  row = (int*) malloc(m*n*sizeof(int));
-  for (i = 0; i < m; i++)
+  row = (int*) malloc(characters*positions*sizeof(int));
+  assert(row != NULL);
+  for (i = 0; i < characters; i++)
   {
-    matrix[i] = &row[i*n];
-    for (j = 0; j < n; j++)
+    matrix[i] = &row[i*positions];
+    for (j = 0; j < positions; j++)
     {
       matrix[i][j] = INT_MIN;
     }
   }
 
-  maxscore = malloc(n*sizeof(int));
+  maxscore = malloc(positions*sizeof(int));
+  assert(maxscore != NULL);
   pssm->maxscore = maxscore;
-  pssm->m = m;
-  pssm->n = n;
+  pssm->characters = characters;
+  pssm->positions = positions;
   pssm->matrix = matrix;
   return pssm;
 }
@@ -63,10 +67,10 @@ static void max_pssmscore (Pssm* pssm)
 {
   int i,j,sc;
 
-  for (i = 0; i < pssm->n; i++)
+  for (i = 0; i < pssm->positions; i++)
   {
     pssm->maxscore[i] = INT_MIN;
-    for (j = 0; j < pssm->m; j++)
+    for (j = 0; j < pssm->characters; j++)
     {
       if ((sc = get_pssmscore(pssm, i, j+'A')) > pssm->maxscore[i])
       {
@@ -79,6 +83,11 @@ static void max_pssmscore (Pssm* pssm)
 /* get maximum score at position d */
 inline int get_pssmmaxscore(Pssm* pssm, int d)
 {
+  if (d >= pssm->positions)
+  {
+    fprintf(stderr,"ERROR: position %d is out of range!\n", d);
+    return INT_MIN;
+  }
   return pssm->maxscore[d];
 }
 
@@ -94,7 +103,7 @@ inline int get_pssmscore (Pssm* pssm, int d, char b)
     b = '[';
 
   /* check position range */
-  if (d < 0 || d >= pssm->n)
+  if (d < 0 || d >= pssm->positions)
   {
     fprintf(stderr, "ERROR: %d out of range!\n", d);
     return INT_MIN;
@@ -275,7 +284,7 @@ void show_pssmatrix(Pssm* pssm)
   for (i = 'A'; i <= '['; i++)
   {
     print = 0;
-    for (j = -1; j < pssm->n; j++)
+    for (j = -1; j < pssm->positions; j++)
     {
       if (j == -1 && get_pssmscore(pssm,0,i) > INT_MIN)
       {

@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <assert.h>
 
 #include "trie.h"
 
@@ -6,6 +7,7 @@
 Trie* trie_new()
 {
   Trie* temp = malloc (sizeof(Trie));
+  assert(temp);
   temp->root = NULL;
   return temp;
 }
@@ -24,14 +26,19 @@ static void trie_element_delete(TrieElement* te)
 /* delete Trie */
 void trie_delete(Trie* t)
 {
-  trie_element_delete(t->root);
-  free(t);
+  if (t != NULL)
+  {
+    trie_element_delete(t->root);
+    free(t);
+  }
 }
 
 /* create new Trie element */
 static TrieElement* trie_element_new()
 {
   TrieElement* temp = malloc(sizeof(TrieElement));
+  assert(temp);
+
   temp->leftchild = NULL;
   temp->rightsibbling = NULL;
   temp->parent = NULL;
@@ -48,7 +55,16 @@ TrieElement* add_new_trieelement(TrieElement* parent, TrieElement* sibbling, int
   temp->key = key;
   temp->edge = edge;
   temp->parent = parent;
-  temp->dephth = 0;
+
+  if (parent == NULL)
+  {
+    temp->dephth = 0;
+  }
+  else
+  {
+    temp->dephth = parent->dephth+1;
+  }
+
   if (sibbling != NULL)
   {
     sibbling->rightsibbling = temp;
@@ -57,7 +73,6 @@ TrieElement* add_new_trieelement(TrieElement* parent, TrieElement* sibbling, int
   {
     temp->rightsibbling = parent->leftchild;
     parent->leftchild = temp;
-    temp->dephth = parent->dephth+1;
   }
 
   return temp;

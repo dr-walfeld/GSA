@@ -1,0 +1,50 @@
+Aufgabe 12.1
+Implementierung eines naiven Algorithmus für die Berechnung einer Umgebung
+einer Sequenz (envir.c). Die Implementierung nutzt die Methode zum Einlesen einer
+Scorematrix (aus Übung 6, scorematrix.c/h) und die 
+Methoden zum Einlesen einer FASTA-Datei
+(aus Übung 5, fasta.c/h). Eingesetzt wurde zudem die einfach verkettete Liste 
+(zuerst für Übung 10 eingesetzt, linkedlist.c/h), 
+welche um Stack-Funktionen (push und pop) erweitert
+wurde. Zudem wurde die Datenstruktur Trie implementiert (trie.c/h).
+Außerdem wurden die Funktionen zum encodieren einer Sequenz als Integer
+(aus Übung 10/11) wiederverwendet (encode.c/h).
+
+Alle erhaltenen q-Worte in der Umgebung werden als Integer codiert
+und die Positionen, an denen die q-Worte auftreten gespeichert.
+
+Aufgabe 12.2
+Implementierung eines verbesserten Algorithmus für die Berechnung der Umgebung.
+Hierfür wurde ein Lookahead-Ansatz gewählt. Hierfür wurde für jedes q-Wort
+einmalig die Zwischenschwellwerte berechnet. Hierfür wurden die Maximal-Werte
+errechnet, die für jedes Zeichen der Sequenz maximal erreicht werden konnten.
+Die Maximalwerte werden beim Einlesen der Scorematrix einmalig ermittelt und in 
+der Struktur gespeichert.
+
+Aufgabe 12.1 und 12.2 sind in der Datei "envir" kombiniert. Bei Aufruf mit
+Parameter pruning=0 erfolgt Berechnung des ganzen Baumes,
+bei pruning=1 werden nur erreichbare Teilbäume berechnet.
+Test-Aufruf mit dem Beispiel aus der Vorlesung mit (test_envir
+bzw. test_envir_with_pruning).
+Im Falle des Lookahead-Scoring muss für jedes q-Wort in Linearzeit
+(insgesamt O(m*q)) die Zwischenwerte berechnet werden. Dafür kann
+aber die Anzahl der Teilbäume dramatisch reduziert werden.
+Die Anzahl der Pushes auf den Stack beim Erzeugen des Baumes reduziert
+sich in diesem Beispiel von 1633640 auf 72 (!). Die erhaltenen Umgebungen
+sind identisch.
+
+Aufgabe 12.3
+PSSM
+Für das Einlesen eine PSSM wurden die Methoden zum Einlesen einer Scoringmatrix
+angepasst (das Test-Programm pssm_test liest eine PSSM aus einer Datei ein
+und gibt sie wieder aus).
+Die Funktionen zur Suche von Positionen einer Sequenz für eine PSSM wurden in der
+Datei pssmlook.c implementiert. Diese verwendet fasta.c/h zum Einlesen einer
+Sequenz (und pssm.c/h zum Einlesen einer PSSM).
+Das Programm ermittelt mit dem naiven und dem lookahead-Algorithmus die Positionen
+und berechnet die Anzahl der verglichenen Positionen. Für den lookahead-
+Algorithmus müssen die Zwischenwerte nur ein einziges Mal für die PSSM 
+berechnet werden.
+Ein Test-Aufruf ist in der Datei angegeben. Hierfür wurden mit blastp Sequenzen
+ermittelt, die einen hohen E-Value bei Verwendung der optimal-Sequenz der PSSM
+ergeben.
