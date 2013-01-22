@@ -19,11 +19,11 @@ static int msa_validate (Msa* msa)
     return 1;
   }
 
-  len = msa->entries->entries[0]->length;
+  len = msa->entries[0]->length;
   /* check if all s' have the same length */
   for (i = 1; i < msa->length; i++)
   {
-    if (msa->entries->entries[i]->length != len)
+    if (msa->entries[i]->length != len)
       return 1;
   }
 
@@ -35,7 +35,7 @@ static int msa_validate (Msa* msa)
     nogap = 0;
     for (j = 0; j < msa->length; j++)
     {
-      if(msa->entries->entries[j]->sequence[i] != '-')
+      if(msa->entries[j]->sequence[i] != '-')
         nogap = 1;
     }
     if (!nogap)
@@ -52,14 +52,15 @@ Msa* msa_initialize (char* filename)
   msa = malloc(sizeof(Msa));
   assert(msa);
 
-  msa->entries = read_fasta_file(filename);
+  msa->mf = read_fasta_file(filename);
   if (msa->entries == NULL)
   {
     free(msa);
     return NULL;
   }
+  msa->entries = msa->mf->entries;
 
-  msa->length = msa->entries->length;
+  msa->length = msa->mf->length;
 
   /* check validity */
   if (msa_validate(msa))
@@ -75,7 +76,7 @@ Msa* msa_initialize (char* filename)
 /* free memory */
 void msa_delete (Msa* msa)
 {
-  multifasta_delete(msa->entries);
+  multifasta_delete(msa->mf);
   free(msa);
 }
 
@@ -85,8 +86,8 @@ static void msa_show(Msa* msa)
   int i;
   for(i = 0; i < msa->length; i++)
   {
-    printf(">%s\n",msa->entries->entries[i]->header);
-    printf("%s\n",msa->entries->entries[i]->sequence);
+    printf(">%s\n",msa->entries[i]->header);
+    printf("%s\n",msa->entries[i]->sequence);
   }
 }
 
@@ -98,14 +99,14 @@ int msa_sum_of_pairs(Msa* msa, int(*score)(void*, char, char), void* scorematrix
   int i,j,k,sc=0;
 
 
-  for (i = 0; i < msa->entries->entries[0]->length; i++)
+  for (i = 0; i < msa->entries[0]->length; i++)
   {
     for (j = 0; j < msa->length; j++)
     {
       for (k = j+1; k < msa->length; k++)
       {
-        sc += score(scorematrix, msa->entries->entries[j]->sequence[i],
-            msa->entries->entries[k]->sequence[i]);
+        sc += score(scorematrix, msa->entries[j]->sequence[i],
+            msa->entries[k]->sequence[i]);
       }
     }
   }
@@ -123,8 +124,9 @@ int msa_consensus_score(Msa* msa, int (*score)(void*, char, char), void* scorema
 
   count = malloc(UCHAR_MAX*sizeof(int));
 
+  printf("\n");
   /* iterate over all positions of alignment */
-  for (i = 0; i < msa->entries->entries[0]->length; i++)
+  for (i = 0; i < msa->entries[0]->length; i++)
   {
     maxval = -1;
     cons = 0;
@@ -140,7 +142,7 @@ int msa_consensus_score(Msa* msa, int (*score)(void*, char, char), void* scorema
     */
     for (j = 0; j < msa->length; j++)
     {
-      pos = msa->entries->entries[j]->sequence[i];
+      pos = msa->entries[j]->sequence[i];
       /* count everything except gap */
       if (pos != '-')
       {
@@ -152,12 +154,15 @@ int msa_consensus_score(Msa* msa, int (*score)(void*, char, char), void* scorema
         }
       }
     }
+    printf("%c",cons);
     /* score each sequence at current position against consensus */
     for (j = 0; j < msa->length; j++)
     {
-      sc += score(scorematrix,cons,msa->entries->entries[j]->sequence[i]);
+      sc += score(scorematrix,cons,msa->entries[j]->sequence[i]);
     }
   }
+
+  printf("\n");
 
   free(count);
 

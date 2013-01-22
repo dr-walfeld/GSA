@@ -8,7 +8,8 @@
 #include "fasta.h"
 
 typedef struct msaStruct {
-  multifasta* entries; /* save entries of multiple sequence alignment with
+  multifasta* mf;  /* pointer to multifasta */
+  fasta** entries; /* save entries of multiple sequence alignment with
                           multifasta */
   int length;
 } Msa;

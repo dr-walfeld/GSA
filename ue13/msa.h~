@@ -20,10 +20,10 @@ void msa_delete(Msa*);
 /* calculate sum of pairs score
    with scorefunction score and scorematrix (may be NULL)
 */
-int msa_sum_of_pairs(Msa*, int (*) (void*, char, char));
+int msa_sum_of_pairs(Msa*, int (*) (void*, char, char), void*);
 /* calculate consensus score
    with scorefunction score and scorematrix (may be NULL)
 */
-int msa_consensus_score(Msa*, int (*) (void*, char, char));
+int msa_consensus_score(Msa*, int (*) (void*, char, char), void*);
 
 #endif
